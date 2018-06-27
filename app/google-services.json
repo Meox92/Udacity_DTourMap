@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "570333490450",
+    "firebase_url": "https://dtourmap.firebaseio.com",
+    "project_id": "dtourmap",
+    "storage_bucket": "dtourmap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570333490450:android:1080d93a689155fa",
+        "android_client_info": {
+          "package_name": "com.example.maola.dtourmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "570333490450-9642amvneg8ssq8tf9n8osg67c3ejt7i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.maola.dtourmap",
+            "certificate_hash": "8f7a3f4d3b97aba167e4f0d182b049f1c9f2706b"
+          }
+        },
+        {
+          "client_id": "570333490450-of541nkfn0bq4tu6n9ref1f2n1pnaid6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVq5sMLx-k9ZWPQfGKbHEa8ArQeLnJqSM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "570333490450-of541nkfn0bq4tu6n9ref1f2n1pnaid6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

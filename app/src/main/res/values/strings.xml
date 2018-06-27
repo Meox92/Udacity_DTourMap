@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">DTourMap</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <!--Menu-->
+    <string name="action_profile">Profilo</string>
+    <string name="action_my_report">I miei report</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="action_share">Condividi</string>
+    <string name="action_rate">Vota</string>
+
+
+</resources>
