@@ -1,7 +1,9 @@
-package com.example.maola.dtourmap;
+package com.example.maola.dtourmap.UserActivity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.maola.dtourmap.R;
 
 public class LoginActivity extends AppCompatActivity {
 
