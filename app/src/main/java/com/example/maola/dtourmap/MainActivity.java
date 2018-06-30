@@ -1,6 +1,7 @@
 package com.example.maola.dtourmap;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.maola.dtourmap.NewReportActivity.NewReportActivity;
+import com.example.maola.dtourmap.Utility.Constants;
 import com.example.maola.dtourmap.Utility.PermissionUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -65,8 +68,15 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(mLastKnownLocation != null) {
+                    double dLat = mLastKnownLocation.getLatitude();
+                    double dLng = mLastKnownLocation.getLongitude();
+                    Intent i = new Intent(getApplicationContext(), NewReportActivity.class);
+                    i.putExtra(Constants.vLat, dLat);
+                    i.putExtra(Constants.vLng, dLng);
+
+                    startActivity(i);
+                }
             }
         });
 
@@ -172,12 +182,11 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "Long press", Toast.LENGTH_LONG).show();
                 double dLat = latLng.latitude;
                 double dLng = latLng.longitude;
-//                Intent i = new Intent(MapActivity.this, NewMarkerActivity.class);
-//                i.putExtra("vLat", dLat);
-//                i.putExtra("vLng", dLng);
-//
-//                startActivity(i);
+                Intent i = new Intent(getApplicationContext(), NewReportActivity.class);
+                i.putExtra(Constants.vLat, dLat);
+                i.putExtra(Constants.vLng, dLng);
 
+                startActivity(i);
             }
         });
 
