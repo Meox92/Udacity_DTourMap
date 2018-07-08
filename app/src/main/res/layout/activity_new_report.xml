@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="report" type="com.example.maola.dtourmap.Model.Report"/>
+        <variable
+            name="handlers"
+            type="com.example.maola.dtourmap.NewReportActivity.NewReportActivity.MyClickHandlers" />
     </data>
 
 <ScrollView
@@ -23,7 +26,7 @@
         android:ems="10"
         android:fontFamily="sans-serif-medium"
         android:hint="Title"
-        android:text="@{report.title}"
+        android:text="@={report.title}"
         android:inputType="textPersonName"
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_title"
@@ -61,7 +64,7 @@
             android:drawablePadding="8dp"
             android:drawableStart="@drawable/oval"
             style="@style/MyDefaultTextStyle"
-            android:text="@{report.address}"
+            android:text="@={report.address}"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="16dp" />
 
@@ -79,14 +82,14 @@
             android:spinnerMode="dialog"
             android:layout_marginBottom="2dp" />
 
-        <TextView
+        <EditText
             android:id="@+id/new_repo_tv_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:drawablePadding="8dp"
             android:drawableStart="@drawable/oval"
-            android:text="@{report.source}"
+            android:text="@={report.source}"
             style="@style/MyDefaultTextStyle" />
 
     </LinearLayout>
@@ -227,6 +230,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:ems="10"
+        android:text="@={report.description}"
         android:inputType="textMultiLine"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -236,6 +240,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Salva"
+        android:onClick="@{(v) -> handlers.onButtonClickWithParam(v, report)}"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_add_other_info" />

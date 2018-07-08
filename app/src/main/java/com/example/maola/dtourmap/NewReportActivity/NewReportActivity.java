@@ -1,5 +1,6 @@
 package com.example.maola.dtourmap.NewReportActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.location.Address;
@@ -23,6 +24,9 @@ public class NewReportActivity extends AppCompatActivity {
     private Double mLat;
     private Double mLng;
     private Report report;
+    private MyClickHandlers handlers;
+    private ActivityNewReportBinding binding;
+
 
 
 
@@ -31,9 +35,8 @@ public class NewReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_new_report);
 
-        ActivityNewReportBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_new_report);
+         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_report);
         report = new Report();
-        report.setTitle("Prova titolo");
 
         Intent i = getIntent();
         mLat = i.getDoubleExtra(Constants.vLat, 0);
@@ -42,12 +45,15 @@ public class NewReportActivity extends AppCompatActivity {
 
         binding.setReport(report);
 
-        binding.newRepoBtnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Save button clicked!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        handlers = new MyClickHandlers(this);
+        binding.setHandlers(handlers);
+
+//        binding.newRepoBtnSave.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(), "Save button clicked!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 
@@ -63,6 +69,24 @@ public class NewReportActivity extends AppCompatActivity {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public class MyClickHandlers {
+
+        Context context;
+
+        public MyClickHandlers(Context context) {
+            this.context = context;
+        }
+
+        public void onFabClicked(View view) {
+            Toast.makeText(getApplicationContext(), "FAB clicked!", Toast.LENGTH_SHORT).show();
+        }
+
+        public void onButtonClickWithParam(View view, Report report) {
+            Toast.makeText(getApplicationContext(), "Button clicked! Name: " + report.description + " title var: ", Toast.LENGTH_SHORT).show();
         }
     }
 

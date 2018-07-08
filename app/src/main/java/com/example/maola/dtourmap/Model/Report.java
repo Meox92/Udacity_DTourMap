@@ -1,12 +1,18 @@
 package com.example.maola.dtourmap.Model;
 
+import android.databinding.Bindable;
+import android.databinding.BaseObservable;
+
+
+import com.android.databinding.library.baseAdapters.BR;
+
 import java.util.List;
 
 /**
  * Created by Maola on 07/08/2017.
  */
 
-public class Report {
+public class Report extends BaseObservable {
 
 
 
@@ -71,12 +77,16 @@ public class Report {
         this.userId = userId;
     }
 
+
+    @Bindable
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+        notifyPropertyChanged(BR.title);
+
     }
 
     public String getDescription() {
