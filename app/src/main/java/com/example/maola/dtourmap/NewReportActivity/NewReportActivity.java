@@ -8,6 +8,9 @@ import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maola.dtourmap.Model.Report;
@@ -16,6 +19,9 @@ import com.example.maola.dtourmap.Utility.Constants;
 import com.example.maola.dtourmap.databinding.ActivityNewReportBinding;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,6 +32,7 @@ public class NewReportActivity extends AppCompatActivity {
     private Report report;
     private MyClickHandlers handlers;
     private ActivityNewReportBinding binding;
+    private Spinner spinner;
 
 
 
@@ -41,7 +48,8 @@ public class NewReportActivity extends AppCompatActivity {
         Intent i = getIntent();
         mLat = i.getDoubleExtra(Constants.vLat, 0);
         mLng = i.getDoubleExtra(Constants.vLng,0);
-        getAddress();
+        report.setAddress(getResources().getString(R.string.retrieve_address));
+        getAddress(); // move to async tasks loader
 
         binding.setReport(report);
 
@@ -54,6 +62,12 @@ public class NewReportActivity extends AppCompatActivity {
 //                Toast.makeText(getApplicationContext(), "Save button clicked!", Toast.LENGTH_SHORT).show();
 //            }
 //        });
+        List<String> categoryArray = Arrays.asList("Seleziona una categoria", "Furto", "Scippo", "Vandalismo", "Spaccio");
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, categoryArray);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.categorySpinner.setAdapter(arrayAdapter);
 
     }
 
@@ -86,6 +100,9 @@ public class NewReportActivity extends AppCompatActivity {
         }
 
         public void onButtonClickWithParam(View view, Report report) {
+            String selectedCategory = String.valueOf(binding.categorySpinner.getSelectedItem());
+            binding.newRepoTvTitle.setError("Inserisci un titolo!");
+            ((TextView)binding.categorySpinner.getSelectedView()).setError("Seleziona una categoria!");
             Toast.makeText(getApplicationContext(), "Button clicked! Name: " + report.description + " title var: ", Toast.LENGTH_SHORT).show();
         }
     }

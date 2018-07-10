@@ -14,6 +14,10 @@
     <string name="action_share">Condividi</string>
     <string name="action_rate">Vota</string>
     <string name="posizione_report_default">Attenzione, la posizione viene calcolata automaticamente in base alla posizione dell\'utente. Se vuoi inserire un report in un altra zona, premi per un paio di secondi sulla mappa sulla desiderata</string>
+    <string name="insert_title">Inserisci un titolo</string>
+    <string name="insert_resource">Inserisci la fonte se disponibile(es articolo di giornale)</string>
+    <string name="retrieve_address">Sto recuperando la posizione..</string>
+    <string name="insert_description">Inserisci i dettagli dell\'evento</string>
 
 
 </resources>

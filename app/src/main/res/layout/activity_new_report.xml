@@ -8,253 +8,275 @@
             type="com.example.maola.dtourmap.NewReportActivity.NewReportActivity.MyClickHandlers" />
     </data>
 
-<ScrollView
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/background_light"
-    android:paddingBottom="25dp"
-    tools:context=".NewReportActivity.NewReportActivity">
-
-<android.support.constraint.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <EditText
-        android:id="@+id/new_repo_tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:fontFamily="sans-serif-medium"
-        android:hint="Title"
-        android:text="@={report.title}"
-        android:inputType="textPersonName"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_title"
-        android:textStyle="bold"
-        android:layout_marginStart="@dimen/title_padding"
-        android:layout_marginTop="16dp"/>
-
-    <TextView
-        android:id="@+id/new_repo_tv_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/title_padding"
-        android:layout_marginTop="4dp"
-        android:text="@{report.reportingDate}"
-        android:textSize="@dimen/text_small"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_title" />
-
-    <LinearLayout
-        android:id="@+id/main_info_layout"
+    <ScrollView
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/body_padding"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_author">
+        android:background="@android:color/background_light"
+        android:paddingBottom="25dp"
+        tools:context=".NewReportActivity.NewReportActivity">
 
-        <TextView
-            android:id="@+id/new_repo_tv_title_address"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:drawablePadding="8dp"
-            android:drawableStart="@drawable/oval"
-            style="@style/MyDefaultTextStyle"
-            android:text="@={report.address}"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="16dp" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/posizione_report_default"
-            android:textSize="@dimen/text_small" />
+            <EditText
+                android:id="@+id/new_repo_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:fontFamily="sans-serif-medium"
+                android:hint="@string/insert_title"
+                android:inputType="textPersonName"
+                android:text="@={report.title}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_title"
+                android:textStyle="bold" />
 
-        <Spinner
-            style="@style/MyDefaultTextStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dialog"
-            android:layout_marginBottom="2dp" />
+            <TextView
+                android:id="@+id/new_repo_tv_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/title_padding"
+                android:layout_marginTop="4dp"
+                android:text="@{report.reportingDate}"
+                android:textSize="@dimen/text_small"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_title" />
 
-        <EditText
-            android:id="@+id/new_repo_tv_source"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:drawablePadding="8dp"
-            android:drawableStart="@drawable/oval"
-            android:text="@={report.source}"
-            style="@style/MyDefaultTextStyle" />
+            <LinearLayout
+                android:id="@+id/main_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/body_padding"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_author">
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/new_repo_tv_title_address"
+                    style="@style/MyDefaultTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/location_pointer"
+                    android:text="@{report.address}"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="16dp" />
 
-    <View
-        android:id="@+id/view2"
-        style="@style/Divider_darker"
-        android:layout_marginTop="16dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_info_layout" />
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/posizione_report_default"
+                    android:textSize="@dimen/text_small" />
 
-    <View
-        android:id="@+id/view3"
-        style="@style/Divider_lighter"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+                <Spinner
+                    android:id="@+id/category_spinner"
+                    style="@style/MyDefaultTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:spinnerMode="dialog" />
 
-    <TextView
-        android:id="@+id/timeline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Timeline"
-        android:fontFamily="sans-serif-medium"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+                <EditText
+                    android:id="@+id/new_repo_tv_source"
+                    style="@style/MyDefaultTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/newspaper"
+                    android:hint="@string/insert_resource"
+                    android:text="@={report.source}" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timeline">
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/button2"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="08:00"
-            android:textAlignment="textStart"
-            android:textSize="@dimen/text_small" />
+            <View
+                android:id="@+id/view2"
+                style="@style/Divider_darker"
+                android:layout_marginTop="16dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/main_info_layout" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="12:00"
-            android:textSize="@dimen/text_small" />
+            <View
+                android:id="@+id/view3"
+                style="@style/Divider_lighter"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view2" />
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="16:00"
-            android:textSize="@dimen/text_small" />
+            <TextView
+                android:id="@+id/timeline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Timeline"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view2" />
 
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="20:00"
-            android:textSize="@dimen/text_small" />
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeline">
 
-        <Button
-            android:id="@+id/button6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="00:00"
-            android:textSize="@dimen/text_small" />
+                <android.support.design.widget.CheckableImageButton
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@drawable/common_full_open_on_phone"
+                    android:checked="false"
+                    android:src="@drawable/common_full_open_on_phone"
+                    android:text="08-12"
+                    android:textAlignment="textStart"
+                    android:textSize="@dimen/text_small" />
+                <android.support.v4.widget.Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/button7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="04:00"
-            android:textSize="@dimen/text_small" />
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="12-16"
+                    android:textSize="@dimen/text_small" />
+                <android.support.v4.widget.Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="16-20"
+                    android:textSize="@dimen/text_small" />
+                <android.support.v4.widget.Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
 
+                <Button
+                    android:id="@+id/button5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="20-00"
+                    android:textSize="@dimen/text_small" />
+                <android.support.v4.widget.Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
 
-    <DatePicker
-        android:id="@+id/datePicker1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+                <Button
+                    android:id="@+id/button6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="00-04"
+                    android:textSize="@dimen/text_small" />
+                <android.support.v4.widget.Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
 
-    <ImageButton
-        android:id="@+id/new_repo_tv_add_picture"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
-        android:minHeight="150dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePicker1"
-        app:srcCompat="@android:drawable/ic_input_add" />
+                <Button
+                    android:id="@+id/button7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="04-08"
+                    android:textSize="@dimen/text_small" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="sans-serif-medium"
-        android:hint="Other info"
-        android:inputType="textPersonName"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_title"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_add_picture" />
-
-    <EditText
-        android:id="@+id/new_repo_tv_add_other_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:ems="10"
-        android:text="@={report.description}"
-        android:inputType="textMultiLine"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <Button
-        android:id="@+id/new_repo_btn_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Salva"
-        android:onClick="@{(v) -> handlers.onButtonClickWithParam(v, report)}"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_add_other_info" />
-
-    <!--<DatePicker-->
-        <!--android:id="@+id/datePicker1"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:datePickerMode="spinner"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/linearLayout"-->
-        <!--android:calendarViewShown="false"/>-->
-</android.support.constraint.ConstraintLayout>
+            </LinearLayout>
 
 
-</ScrollView>
+            <DatePicker
+                android:id="@+id/datePicker1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+            <ImageButton
+                android:id="@+id/new_repo_tv_add_picture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:minHeight="150dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/datePicker1"
+                app:srcCompat="@android:drawable/ic_input_add" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:hint="Other info"
+                android:inputType="textPersonName"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_title"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_add_picture" />
+
+            <EditText
+                android:id="@+id/new_repo_tv_add_other_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:ems="10"
+                android:hint="@string/insert_description"
+                android:inputType="textMultiLine"
+                android:text="@={report.description}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <Button
+                android:id="@+id/new_repo_btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Salva"
+                android:onClick="@{(v) -> handlers.onButtonClickWithParam(v, report)}"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_add_other_info" />
+
+            <!--<DatePicker-->
+            <!--android:id="@+id/datePicker1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:datePickerMode="spinner"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/linearLayout"-->
+            <!--android:calendarViewShown="false"/>-->
+        </android.support.constraint.ConstraintLayout>
+
+
+    </ScrollView>
 </layout>
