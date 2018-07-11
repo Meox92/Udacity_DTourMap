@@ -13,11 +13,20 @@
     <string name="action_settings">Impostazioni</string>
     <string name="action_share">Condividi</string>
     <string name="action_rate">Vota</string>
+    <!--String-->
     <string name="posizione_report_default">Attenzione, la posizione viene calcolata automaticamente in base alla posizione dell\'utente. Se vuoi inserire un report in un altra zona, premi per un paio di secondi sulla mappa sulla desiderata</string>
     <string name="insert_title">Inserisci un titolo</string>
     <string name="insert_resource">Inserisci la fonte se disponibile(es articolo di giornale)</string>
     <string name="retrieve_address">Sto recuperando la posizione..</string>
     <string name="insert_description">Inserisci i dettagli dell\'evento</string>
+
+    <!--CATEGORIE-->
+    <string name="furto">Furto</string>
+    <string name="scippo">Scippo</string>
+    <string name="vandalismo">Vandalismo</string>
+    <string name="spaccio">Spaccio</string>
+    <string name="altro">Altro</string>
+
 
 
 </resources>

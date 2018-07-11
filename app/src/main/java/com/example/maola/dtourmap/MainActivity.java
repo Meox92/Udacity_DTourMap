@@ -21,8 +21,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.maola.dtourmap.Model.Report;
 import com.example.maola.dtourmap.NewReportActivity.NewReportActivity;
 import com.example.maola.dtourmap.Utility.Constants;
+import com.example.maola.dtourmap.Utility.FirebaseUtils;
 import com.example.maola.dtourmap.Utility.PermissionUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -30,8 +32,19 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -54,6 +67,14 @@ public class MainActivity extends AppCompatActivity
             }
         }
     };
+    private DatabaseReference myRef;
+    private Object reportIdObj;
+    private List<Object> listaChiavi;
+    private Marker markerID;
+    private HashMap<String, Object> result;
+    private List<Report> lSegnalazioni;
+    private Report report1;
+
 
 
     @Override
@@ -93,6 +114,8 @@ public class MainActivity extends AppCompatActivity
         mapFragment.getMapAsync(this);
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        myRef = FirebaseUtils.getReportRef();
+        reportListener();
 
     }
 
@@ -270,6 +293,83 @@ public class MainActivity extends AppCompatActivity
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    public void reportListener(){
+        lSegnalazioni = new ArrayList<Report>();
+        listaChiavi = new ArrayList<>();
+//        final List<String> stringList = new ArrayList<>();
+        result = new HashMap<>();
+
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapSegnalazioni : dataSnapshot.getChildren()) {
+                    lSegnalazioni.add(snapSegnalazioni.getValue(Report.class));
+                    reportIdObj = snapSegnalazioni.getKey();
+                    listaChiavi.add(reportIdObj);
+
+                    //TODO creare modalità lista
+                }
+                for(int i = 0; i< lSegnalazioni.size(); i++){
+                    report1 = lSegnalazioni.get(i);
+                    String typology = report1.getTypology();
+                    String description = report1.getDescription();
+                    String time = report1.getPostingDate();
+
+//                    mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
+//                    ).title(report1.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+//                    setMarkerColor(report1, typology);
+                    markerID = setMarkerColor(report1, typology);
+
+                    result.put(markerID.getId(), listaChiavi.get(i));
+                    Log.i("TAG", result.toString());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+    }
+
+    public Marker setMarkerColor(Report report1, String typology){
+        Marker mRenderedMarker;
+
+
+        if(typology.equals(getString(R.string.spaccio))){
+            mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
+            ).title(report1.getTitle())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .snippet(report1.getPoints() + "_" + report1.getPostingDate()+ "_" + report1.getDescription()));
+        }
+        else if(typology.equals(getString(R.string.furto))){
+            mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
+            ).title(report1.getTitle())
+                    .snippet(report1.getPoints() + "_" + report1.getPostingDate()+ "_" + report1.getDescription())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        } else if(typology.equals(getString(R.string.vandalismo))){
+            mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
+            ).title(report1.getTitle())
+                    .snippet(report1.getPoints() + "_" + report1.getPostingDate()+ "_" + report1.getDescription())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+        } else if(typology.equals(getString(R.string.altro))){
+            mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
+            ).title(report1.getTitle())
+                    .snippet(report1.getPoints() + "_" + report1.getPostingDate()+ "_" + report1.getDescription())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+        }else{
+            Log.i("MapsActivity", "Errore");
+            mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
+            ).title(report1.getTitle())
+                    .snippet("non disp1_non disp2_non disp3"));
+        }
+
+        return mRenderedMarker;
     }
 
 

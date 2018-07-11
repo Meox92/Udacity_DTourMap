@@ -27,7 +27,7 @@ public class Report extends BaseObservable {
     public String address;
     public List<String> time;
     //Data di segnalazione
-    public String reportingDate;
+    public String postingDate;
     public List<String> comments;
     public String source;
     public int points;
@@ -35,7 +35,8 @@ public class Report extends BaseObservable {
     public Report(){}
 
 
-    public Report(String userId, Double lat, Double lng, String title, String description, String typology, String picture, List<String> time, String reportingDate, List<String> comments, int points, String markerID, String source) {
+    public Report(String userId, Double lat, Double lng, String title, String description, String typology, String picture, List<String> time,
+                  String postingDate, int points, String markerID, String source) {
         this.userId = userId;
         this.lat = lat;
         this.lng = lng;
@@ -44,14 +45,15 @@ public class Report extends BaseObservable {
         this.typology = typology;
         this.picture = picture;
         this.time = time;
-        this.reportingDate = reportingDate;
-        this.comments = comments;
+        this.postingDate = postingDate;
+//        this.comments = comments;
         this.points = points;
         this.markerID = markerID;
         this.source = source;
     }
 
-    public Report(String userId, Double lat, Double lng, String title, String description, String typology, String picture, List<String> time, String reportingDate, List<String> comments, int points, String markerID, String source, String address) {
+    public Report(String userId, Double lat, Double lng, String title, String description, String typology,
+                  String picture, List<String> time, String postingDate, List<String> comments, int points, String markerID, String source, String address) {
         this.userId = userId;
         this.lat = lat;
         this.lng = lng;
@@ -60,7 +62,7 @@ public class Report extends BaseObservable {
         this.typology = typology;
         this.picture = picture;
         this.time = time;
-        this.reportingDate = reportingDate;
+        this.postingDate = postingDate;
         this.comments = comments;
         this.points = points;
         this.markerID = markerID;
@@ -137,12 +139,12 @@ public class Report extends BaseObservable {
         this.time = time;
     }
 
-    public String getReportingDate() {
-        return reportingDate;
+    public String getPostingDate() {
+        return postingDate;
     }
 
-    public void setReportingDate(String reportingDate) {
-        this.reportingDate = reportingDate;
+    public void setPostingDate(String postingDate) {
+        this.postingDate = postingDate;
     }
 
 
