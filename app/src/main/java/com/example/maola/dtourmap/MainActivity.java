@@ -297,9 +297,9 @@ public class MainActivity extends AppCompatActivity
 
     public void reportListener(){
         lSegnalazioni = new ArrayList<Report>();
-        listaChiavi = new ArrayList<>();
+//        listaChiavi = new ArrayList<>();
 //        final List<String> stringList = new ArrayList<>();
-        result = new HashMap<>();
+//        result = new HashMap<>();
 
 
         myRef.addValueEventListener(new ValueEventListener() {
@@ -307,24 +307,24 @@ public class MainActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapSegnalazioni : dataSnapshot.getChildren()) {
                     lSegnalazioni.add(snapSegnalazioni.getValue(Report.class));
-                    reportIdObj = snapSegnalazioni.getKey();
-                    listaChiavi.add(reportIdObj);
+//                    reportIdObj = snapSegnalazioni.getKey();
+//                    listaChiavi.add(reportIdObj);
 
                     //TODO creare modalità lista
                 }
                 for(int i = 0; i< lSegnalazioni.size(); i++){
                     report1 = lSegnalazioni.get(i);
                     String typology = report1.getTypology();
-                    String description = report1.getDescription();
-                    String time = report1.getPostingDate();
+//                    String description = report1.getDescription();
+//                    String time = report1.getPostingDate();
 
 //                    mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
 //                    ).title(report1.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 //                    setMarkerColor(report1, typology);
                     markerID = setMarkerColor(report1, typology);
 
-                    result.put(markerID.getId(), listaChiavi.get(i));
-                    Log.i("TAG", result.toString());
+//                    result.put(markerID.getId(), listaChiavi.get(i));
+//                    Log.i("TAG", result.toString());
 
                 }
             }
@@ -337,30 +337,31 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public Marker setMarkerColor(Report report1, String typology){
+    public Marker setMarkerColor(Report report1, String category){
         Marker mRenderedMarker;
+        String snippetString =report1.getPostingDate()+ "_" + report1.getDescription();
 
 
-        if(typology.equals(getString(R.string.spaccio))){
+        if(category.equals(getString(R.string.spaccio))){
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
             ).title(report1.getTitle())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                    .snippet(report1.getPoints() + "_" + report1.getPostingDate()+ "_" + report1.getDescription()));
+                    .snippet(snippetString));
         }
-        else if(typology.equals(getString(R.string.furto))){
+        else if(category.equals(getString(R.string.furto))){
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
             ).title(report1.getTitle())
-                    .snippet(report1.getPoints() + "_" + report1.getPostingDate()+ "_" + report1.getDescription())
+                    .snippet(snippetString)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        } else if(typology.equals(getString(R.string.vandalismo))){
+        } else if(category.equals(getString(R.string.vandalismo))){
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
             ).title(report1.getTitle())
-                    .snippet(report1.getPoints() + "_" + report1.getPostingDate()+ "_" + report1.getDescription())
+                    .snippet(snippetString)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-        } else if(typology.equals(getString(R.string.altro))){
+        } else if(category.equals(getString(R.string.altro))){
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
             ).title(report1.getTitle())
-                    .snippet(report1.getPoints() + "_" + report1.getPostingDate()+ "_" + report1.getDescription())
+                    .snippet(snippetString)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
         }else{
             Log.i("MapsActivity", "Errore");

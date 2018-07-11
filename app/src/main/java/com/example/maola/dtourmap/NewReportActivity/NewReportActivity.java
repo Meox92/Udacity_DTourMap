@@ -259,6 +259,8 @@ public class NewReportActivity extends AppCompatActivity {
         String title = binding.newRepoTvTitle.getText().toString();
         if(!title.isEmpty()) {
             report.setTitle(report.title);
+        } else {
+            binding.newRepoTvTitle.setError("Inserisci un titolo!");
         }
 
 
@@ -284,7 +286,6 @@ public class NewReportActivity extends AppCompatActivity {
         public void onButtonClickWithParam(View view, Report report) {
             save();
             String selectedCategory = String.valueOf(binding.categorySpinner.getSelectedItem());
-            binding.newRepoTvTitle.setError("Inserisci un titolo!");
             ((TextView)binding.categorySpinner.getSelectedView()).setError("Seleziona una categoria!");
             Toast.makeText(getApplicationContext(), "Button clicked! Name: " + report.description + " title var: ", Toast.LENGTH_SHORT).show();
         }
