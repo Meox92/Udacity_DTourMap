@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -56,6 +56,9 @@ public class NewReportActivity extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference myRef;
     private String markerID;
+    private List<String> categoryArray;
+    private Uri reportPic;
+    private String urlReportPic;
 
 
 
@@ -66,19 +69,19 @@ public class NewReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_new_report);
 
-         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_report);
-        report = new Report();
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_new_report);
 
         Intent i = getIntent();
         mLat = i.getDoubleExtra(Constants.vLat, 0);
         mLng = i.getDoubleExtra(Constants.vLng,0);
+        report = new Report();
+        setMandatoryField();
         report.setAddress(getResources().getString(R.string.retrieve_address));
-        getAddress(); // move to async tasks loader
-
         binding.setReport(report);
-
         handlers = new MyClickHandlers(this);
         binding.setHandlers(handlers);
+        getAddress(); // move to async tasks loader
+
 
 //        binding.newRepoBtnSave.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -86,7 +89,7 @@ public class NewReportActivity extends AppCompatActivity {
 //                Toast.makeText(getApplicationContext(), "Save button clicked!", Toast.LENGTH_SHORT).show();
 //            }
 //        });
-        List<String> categoryArray = Arrays.asList("Seleziona una categoria", "Furto", "Scippo", "Vandalismo", "Spaccio");
+        categoryArray = Arrays.asList("Seleziona una categoria", "Furto", "Scippo", "Vandalismo", "Spaccio");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, categoryArray);
@@ -113,11 +116,11 @@ public class NewReportActivity extends AppCompatActivity {
         /*-------------------------------------------------*/
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        riversRef = mStorageRef.child("images/" + user.getUid() + "/" + markerID + "/reportpicture1");
+
         /*-------------------------------------------------*/
 
         myRef = FirebaseUtils.getReportRef();
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        myRef = database.getReference(getString(R.string.report));
         markerID = myRef.push().getKey();
 
     }
@@ -159,6 +162,7 @@ public class NewReportActivity extends AppCompatActivity {
 
 
     public void setThumbnail(Intent data) {
+
         /*Questo metodo mostra l'anteprima e il nome del file selezionata, premendo sul nome si può eliminare il file */
 //        reportPic = data.getData();
 //        newMarkerTxtPic1.setText(reportPic.getLastPathSegment());
@@ -180,94 +184,92 @@ public class NewReportActivity extends AppCompatActivity {
     //this method will upload the file
     private void uploadFile() {
         //if there is a file to upload
-//        if (reportPic != null) {
-//
-//            //displaying a progress dialog while upload is going on
-//            final ProgressDialog progressDialog = new ProgressDialog(this);
-//            progressDialog.setTitle("Uploading");
-//            progressDialog.show();
+        if (reportPic != null) {
+
+            //displaying a progress dialog while upload is going on
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading");
+            progressDialog.show();
 
 
-//            riversRef.putFile(reportPic)
-//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//
-//                            @SuppressWarnings("VisibleForTests") final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-//                            urlReportPic = downloadUrl.toString();
-//
-//
-//                            progressDialog.dismiss();
-//                            //and displaying a success toast
-//                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception exception) {
-//                            //if the upload is not successfull
-//                            //hiding the progress dialog
-//                            progressDialog.dismiss();
-//
-//                            //and displaying error message
-//                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-//                        }
-//                    })
-//                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                            //calculating progress percentage
-//                            @SuppressWarnings("VisibleForTests") double progress = (100.0 * taskSnapshot.getBytesTransferred());
-//
-//                            //displaying percentage in progress dialog
-//                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-//                        }
-//                    });
-//        }
-//        //if there is not any file
-//        else {
-//            //you can display an error toast
-//        }
+            riversRef.putFile(reportPic)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            @SuppressWarnings("VisibleForTests") final Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            urlReportPic = downloadUrl.toString();
+
+
+                            progressDialog.dismiss();
+                            //and displaying a success toast
+                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            //if the upload is not successfull
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+
+                            //and displaying error message
+                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //calculating progress percentage
+                            @SuppressWarnings("VisibleForTests") double progress = (100.0 * taskSnapshot.getBytesTransferred());
+
+                            //displaying percentage in progress dialog
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                        }
+                    });
+        }
+        //if there is not any file
+        else {
+            //you can display an error toast
+        }
     }
 
-    public void save() {
+    private void setMandatoryField() {
+        // Avoid app crash because of DB
+        report.setLat(0.0d);
+        report.setLng(0.0d);
+        report.setTypology("N.D.");
+    }
 
-        //                /*---Array Checkbox*/
+    public void setDataToPush() {
+        List <String> time = new ArrayList<>();
 
-
-        Date currentTime = Calendar.getInstance().getTime();
-
-        List<String> commenti = new ArrayList<>();
-
-        List <String> time = Arrays.asList("");
-
-//        report = new Report("no name",
-//            mLat,
-//            mLng,
-//            report.title,
-//            report.description,
-//            binding.categorySpinner.getSelectedItem().toString(),
-//            "",
-//            time,
-//            currentTime.toString(),
-//            0,
-//            "",
-//            "");
-        report = new Report();
         report.setLat(mLat);
         report.setLng(mLng);
-        String title = binding.newRepoTvTitle.getText().toString();
-        if(!title.isEmpty()) {
-            report.setTitle(report.title);
+        report.setMarkerID(markerID);
+        Date currentTime = Calendar.getInstance().getTime();
+        report.setPostingDate(currentTime.toString());
+
+        String selectedCategory = String.valueOf(binding.categorySpinner.getSelectedItem());
+        if(selectedCategory.equals(categoryArray.get(0))) {
+            ((TextView)binding.categorySpinner.getSelectedView()).setError("Seleziona una categoria!");
+            return;
         } else {
-            binding.newRepoTvTitle.setError("Inserisci un titolo!");
+            report.setTypology(selectedCategory);
         }
 
+        CheckBox[] checkBoxes2 = {binding.checkBox, binding.checkBox2, binding.checkBox3, binding.checkBox4, binding.checkBox5, binding.checkBox6};
+        for (CheckBox checkBox: checkBoxes2){
+            if(checkBox.isChecked()){
+                String time1 = checkBox.getText().toString();
+                time.add(time1);
+            }
+        }
+        report.setTime(time);
 
-        myRef.child(markerID).setValue(report);
 
-        Toast.makeText(getApplicationContext(), "Segnalazione inserita con successo!", Toast.LENGTH_SHORT).show();
 
+     Toast.makeText(getApplicationContext(), "Segnalazione inserita con successo!", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -283,10 +285,15 @@ public class NewReportActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "FAB clicked!", Toast.LENGTH_SHORT).show();
         }
 
+        public void addPhoto() {
+            openGallery();
+        }
+
         public void onButtonClickWithParam(View view, Report report) {
-            save();
-            String selectedCategory = String.valueOf(binding.categorySpinner.getSelectedItem());
-            ((TextView)binding.categorySpinner.getSelectedView()).setError("Seleziona una categoria!");
+            setDataToPush();
+
+            myRef.child(markerID).setValue(report);
+
             Toast.makeText(getApplicationContext(), "Button clicked! Name: " + report.description + " title var: ", Toast.LENGTH_SHORT).show();
         }
     }

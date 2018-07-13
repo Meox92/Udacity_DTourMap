@@ -26,7 +26,17 @@
     <string name="vandalismo">Vandalismo</string>
     <string name="spaccio">Spaccio</string>
     <string name="altro">Altro</string>
+    <string name="insert_time">Inserisci la fascia oraria (puoi inserirne più d\'una) e giorno in cui è avvenuto il fatto</string>
 
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="new_user">New User?</string>
+    <string name="login">Login</string>
+    <string name="signin">Sign In</string>
+    <string name="email">E-mail</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="remember">Ricorda</string>
+    <string name="auth_failed">Authentication failed!</string>
 
 
 </resources>

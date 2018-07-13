@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.maola.dtourmap.Model.Report;
 import com.example.maola.dtourmap.NewReportActivity.NewReportActivity;
+import com.example.maola.dtourmap.UserActivity.LoginActivity;
 import com.example.maola.dtourmap.Utility.Constants;
 import com.example.maola.dtourmap.Utility.FirebaseUtils;
 import com.example.maola.dtourmap.Utility.PermissionUtils;
@@ -37,6 +38,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -75,6 +78,9 @@ public class MainActivity extends AppCompatActivity
     private List<Report> lSegnalazioni;
     private Report report1;
 
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
 
     @Override
@@ -84,19 +90,38 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mLastKnownLocation != null) {
-                    double dLat = mLastKnownLocation.getLatitude();
-                    double dLng = mLastKnownLocation.getLongitude();
-                    Intent i = new Intent(getApplicationContext(), NewReportActivity.class);
-                    i.putExtra(Constants.vLat, dLat);
-                    i.putExtra(Constants.vLng, dLng);
 
-                    startActivity(i);
-                }
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
+                    @Override
+                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user == null) {
+                            // user auth state is changed - user is null
+                            // launch login activity
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            if(mLastKnownLocation != null) {
+                                double dLat = mLastKnownLocation.getLatitude();
+                                double dLng = mLastKnownLocation.getLongitude();
+                                Intent i = new Intent(getApplicationContext(), NewReportActivity.class);
+                                i.putExtra(Constants.vLat, dLat);
+                                i.putExtra(Constants.vLng, dLng);
+
+                                startActivity(i);
+                            }
+                        }
+                    }
+                };
+
             }
         });
 
@@ -201,16 +226,34 @@ public class MainActivity extends AppCompatActivity
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                Toast.makeText(getApplicationContext(), "Long press", Toast.LENGTH_LONG).show();
-                double dLat = latLng.latitude;
-                double dLng = latLng.longitude;
-                Intent i = new Intent(getApplicationContext(), NewReportActivity.class);
-                i.putExtra(Constants.vLat, dLat);
-                i.putExtra(Constants.vLng, dLng);
 
-                startActivity(i);
-            }
-        });
+//                Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
+//                    double dLat = latLng.latitude;
+//                    double dLng = latLng.longitude;
+//                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+//                    i.putExtra(Constants.vLat, dLat);
+//                    i.putExtra(Constants.vLng, dLng);
+//
+//                    startActivity(i);
+                final double dLat = latLng.latitude;
+                final double dLng = latLng.longitude;
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
+
+                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                    i.putExtra(Constants.vLat, dLat);
+                    i.putExtra(Constants.vLng, dLng);
+
+                    startActivity(i);
+                } else {
+                    Toast.makeText(getApplicationContext(), "User not null " + user, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), NewReportActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }});
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -339,7 +382,7 @@ public class MainActivity extends AppCompatActivity
 
     public Marker setMarkerColor(Report report1, String category){
         Marker mRenderedMarker;
-        String snippetString =report1.getPostingDate()+ "_" + report1.getDescription();
+        String snippetString =report1.getPostingDate();
 
 
         if(category.equals(getString(R.string.spaccio))){
@@ -366,7 +409,7 @@ public class MainActivity extends AppCompatActivity
         }else{
             Log.i("MapsActivity", "Errore");
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
-            ).title(report1.getTitle())
+            ).title(report1.getAddress())
                     .snippet("non disp1_non disp2_non disp3"));
         }
 

@@ -3,4 +3,7 @@
     <color name="colorPrimaryDark">#014137</color>
     <color name="colorPrimary">#00796b</color>
     <color name="colorAccent">#FF9800</color>
+
+    <color name="colorBordo">#144628</color>
+
 </resources>

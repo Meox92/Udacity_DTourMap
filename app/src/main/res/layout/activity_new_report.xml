@@ -18,20 +18,24 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/new_repo_tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:fontFamily="sans-serif-medium"
-                android:hint="@string/insert_title"
-                android:inputType="textPersonName"
-                android:text="@={report.title}"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
+            <TextView
+                android:id="@+id/new_repo_tv_title_address"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_title"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:ems="10"
+                android:fontFamily="sans-serif-medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/location_pointer"
+                android:text="@{report.address}"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="16dp" />
+
 
             <TextView
                 android:id="@+id/new_repo_tv_author"
@@ -42,7 +46,7 @@
                 android:text="@{report.postingDate}"
                 android:textSize="@dimen/text_small"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_title" />
+                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_title_address" />
 
             <LinearLayout
                 android:id="@+id/main_info_layout"
@@ -54,18 +58,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_author">
-
-                <TextView
-                    android:id="@+id/new_repo_tv_title_address"
-                    style="@style/MyDefaultTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:drawablePadding="8dp"
-                    android:drawableStart="@drawable/location_pointer"
-                    android:text="@{report.address}"
-                    tools:layout_editor_absoluteX="16dp"
-                    tools:layout_editor_absoluteY="16dp" />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -119,10 +111,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Timeline"
                 android:fontFamily="sans-serif-medium"
+                android:text="Timeline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+            <TextView
+                android:id="@+id/textview5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:text="@string/insert_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeline" />
 
             <LinearLayout
                 android:id="@+id/linearLayout"
@@ -131,77 +134,77 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/timeline">
+                app:layout_constraintTop_toBottomOf="@+id/textview5">
 
-                <android.support.design.widget.CheckableImageButton
-                    android:id="@+id/button2"
+
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@drawable/common_full_open_on_phone"
-                    android:checked="false"
-                    android:src="@drawable/common_full_open_on_phone"
-                    android:text="08-12"
-                    android:textAlignment="textStart"
-                    android:textSize="@dimen/text_small" />
+                    android:button="@null"
+                    android:drawableTop="?android:attr/listChoiceIndicatorMultiple"
+                    android:text="00:-04" />
+
+
                 <android.support.v4.widget.Space
                     android:layout_width="8dp"
                     android:layout_height="wrap_content" />
 
-                <Button
-                    android:id="@+id/button3"
+                <CheckBox
+                    android:id="@+id/checkBox2"
+                    style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="12-16"
-                    android:textSize="@dimen/text_small" />
+                    android:text="04-08" />
+
                 <android.support.v4.widget.Space
                     android:layout_width="8dp"
                     android:layout_height="wrap_content" />
 
-                <Button
-                    android:id="@+id/button4"
+                <CheckBox
+                    android:id="@+id/checkBox3"
+                    style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="16-20"
-                    android:textSize="@dimen/text_small" />
+                    android:text="08-12" />
+
                 <android.support.v4.widget.Space
                     android:layout_width="8dp"
                     android:layout_height="wrap_content" />
 
-                <Button
-                    android:id="@+id/button5"
+                <CheckBox
+                    android:id="@+id/checkBox4"
+                    style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="20-00"
-                    android:textSize="@dimen/text_small" />
+                    android:text="12-16" />
+
                 <android.support.v4.widget.Space
                     android:layout_width="8dp"
                     android:layout_height="wrap_content" />
 
-                <Button
-                    android:id="@+id/button6"
+                <CheckBox
+                    android:id="@+id/checkBox5"
+                    style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="00-04"
-                    android:textSize="@dimen/text_small" />
+                    android:text="16-20" />
+
                 <android.support.v4.widget.Space
                     android:layout_width="8dp"
                     android:layout_height="wrap_content" />
 
-                <Button
-                    android:id="@+id/button7"
+                <CheckBox
+                    android:id="@+id/checkBox6"
+                    style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="04-08"
-                    android:textSize="@dimen/text_small" />
+                    android:text="20-00" />
 
             </LinearLayout>
 
@@ -226,6 +229,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/datePicker1"
+                android:onClick="@{(v) -> handlers.addPhoto()}"
                 app:srcCompat="@android:drawable/ic_input_add" />
 
             <TextView
@@ -261,8 +265,8 @@
                 android:id="@+id/new_repo_btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Salva"
                 android:onClick="@{(v) -> handlers.onButtonClickWithParam(v, report)}"
+                android:text="Salva"
 
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

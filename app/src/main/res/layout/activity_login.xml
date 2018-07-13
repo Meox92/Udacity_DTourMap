@@ -4,6 +4,113 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserActivity.LoginActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.maola.dtourmap.UserActivity.LoginActivity"
+    tools:layout_editor_absoluteY="81dp"
+    tools:showIn="@layout/activity_login">
 
+    <TextView
+        android:id="@+id/login_tw_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="3dp"
+        android:text="@string/email"
+        app:layout_constraintBottom_toTopOf="@+id/login_et_username"
+        app:layout_constraintStart_toStartOf="@+id/login_et_username" />
+
+    <TextView
+        android:id="@+id/login_tw_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="3dp"
+        android:text="@string/password"
+        app:layout_constraintBottom_toTopOf="@+id/login_et_pswd"
+        app:layout_constraintStart_toStartOf="@+id/login_et_pswd" />
+
+    <EditText
+        android:id="@+id/login_et_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/custom_field"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="5dp"
+        android:paddingEnd="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingStart="15dp"
+        android:text="example@example.com"
+        app:layout_constraintBottom_toTopOf="@+id/login_tw_password"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/login_et_pswd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_field"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:padding="5dp"
+        android:paddingEnd="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingStart="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/login_edt_new_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:clickable="true"
+        android:text="@string/new_user"
+        app:layout_constraintBottom_toTopOf="@+id/login_cb_remember"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/login__btn_signin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="86dp"
+        android:background="@drawable/custom_button"
+        android:paddingEnd="45sp"
+        android:paddingLeft="45sp"
+        android:paddingRight="45sp"
+        android:paddingStart="45sp"
+        android:text="@string/login"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <CheckBox
+        android:id="@+id/login_cb_remember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/remember"
+        app:layout_constraintBottom_toTopOf="@+id/login__btn_signin"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_testo_8" />
 </android.support.constraint.ConstraintLayout>

@@ -12,6 +12,8 @@
     <dimen name="title_padding">8dp</dimen>
     <dimen name="body_padding">16dp</dimen>
 
+    <dimen name="bordo">1.5dp</dimen>
+
 
 
 </resources>
