@@ -1,4 +1,4 @@
-package com.example.maola.dtourmap.NewReportActivity;
+package com.example.maola.dtourmap.reportActivities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -76,7 +76,7 @@ public class NewReportActivity extends AppCompatActivity {
         mLng = i.getDoubleExtra(Constants.vLng,0);
         report = new Report();
         setMandatoryField();
-        report.setAddress(getResources().getString(R.string.retrieve_address));
+        binding.newRepoTvTitleAddress.setText(getResources().getString(R.string.retrieve_address));
         binding.setReport(report);
         handlers = new MyClickHandlers(this);
         binding.setHandlers(handlers);
@@ -114,14 +114,12 @@ public class NewReportActivity extends AppCompatActivity {
             }
         };
         /*-------------------------------------------------*/
-
+        myRef = FirebaseUtils.getReportRef();
+        markerID = myRef.push().getKey();
         mStorageRef = FirebaseStorage.getInstance().getReference();
         riversRef = mStorageRef.child("images/" + user.getUid() + "/" + markerID + "/reportpicture1");
 
         /*-------------------------------------------------*/
-
-        myRef = FirebaseUtils.getReportRef();
-        markerID = myRef.push().getKey();
 
     }
 
@@ -152,7 +150,6 @@ public class NewReportActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
-
                     setThumbnail(data);
                     uploadFile();
                 }
@@ -161,10 +158,11 @@ public class NewReportActivity extends AppCompatActivity {
 
 
 
+
     public void setThumbnail(Intent data) {
 
         /*Questo metodo mostra l'anteprima e il nome del file selezionata, premendo sul nome si può eliminare il file */
-//        reportPic = data.getData();
+        reportPic = data.getData();
 //        newMarkerTxtPic1.setText(reportPic.getLastPathSegment());
 //        newMarkerTxtPic1.setVisibility(View.VISIBLE);
 //        newMarkerTxtPic1.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +174,7 @@ public class NewReportActivity extends AppCompatActivity {
 //                newMarkerImgPic1.setVisibility(View.GONE);
 //            }
 //        });
-//        newMarkerImgPic1.setImageURI(reportPic);
+        binding.newRepoTvAddPicture.setImageURI(reportPic);
 //        newMarkerImgPic1.setVisibility(View.VISIBLE);
     }
 

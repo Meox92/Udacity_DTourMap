@@ -22,7 +22,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.maola.dtourmap.Model.Report;
-import com.example.maola.dtourmap.NewReportActivity.NewReportActivity;
+import com.example.maola.dtourmap.reportActivities.NewReportActivity;
 import com.example.maola.dtourmap.UserActivity.LoginActivity;
 import com.example.maola.dtourmap.Utility.Constants;
 import com.example.maola.dtourmap.Utility.FirebaseUtils;
@@ -37,7 +37,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -80,6 +82,9 @@ public class MainActivity extends AppCompatActivity
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private final String TAG = "2MainActivity";
+    private FirebaseUser currentUser;
+    private Toolbar toolbar;
 
 
 
@@ -87,61 +92,43 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        // Check user status and eventually redirect to loginActivity
+        getUserStatus();
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
-                    @Override
-                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user == null) {
-                            // user auth state is changed - user is null
-                            // launch login activity
-                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                            finish();
-                        } else {
-                            if(mLastKnownLocation != null) {
-                                double dLat = mLastKnownLocation.getLatitude();
-                                double dLng = mLastKnownLocation.getLongitude();
-                                Intent i = new Intent(getApplicationContext(), NewReportActivity.class);
-                                i.putExtra(Constants.vLat, dLat);
-                                i.putExtra(Constants.vLng, dLng);
-
-                                startActivity(i);
-                            }
-                        }
-                    }
-                };
-
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+        // Setup UI
+        setupUI();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        //Firebase DB
         myRef = FirebaseUtils.getReportRef();
         reportListener();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        firebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        if (mAuthListener != null) {
+//            firebaseAuth.removeAuthStateListener(mAuthListener);
+//        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        getUserStatus();
     }
 
     @Override
@@ -192,12 +179,96 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_rate) {
 
+        } else if (id == R.id.logout) {
+            logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    private void getUserStatus(){
+        // Get User instance
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser == null) {
+            Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(i);
+            finish();
+        } else if(currentUser.isAnonymous()) {
+            Toast.makeText(getApplicationContext(), "User isAnonymous", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), currentUser.getEmail(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setupUI() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (currentUser == null) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                } else {
+                    if(currentUser.isAnonymous()) {
+                        logout();
+                    } else if(mLastKnownLocation != null) {
+                        double dLat = mLastKnownLocation.getLatitude();
+                        double dLng = mLastKnownLocation.getLongitude();
+                        Intent i = new Intent(getApplicationContext(), NewReportActivity.class);
+                        i.putExtra(Constants.vLat, dLat);
+                        i.putExtra(Constants.vLng, dLng);
+
+                        startActivity(i);
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Impossibile trovare la posizione corrente, premi un paio di secondi sulla " +
+                                        "mappa per aggiungere un nuovo report", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
+
+    private void logout() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser != null && currentUser.isAnonymous()){
+            currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Account deleted", Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                        i.putExtra(Constants.show_anonymous, false);
+                        startActivity(i);
+                    } else {
+                        Log.w(TAG,"Something is wrong!");
+                    }
+                }
+            });
+        } else {
+            FirebaseAuth.getInstance().signOut();
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -237,22 +308,34 @@ public class MainActivity extends AppCompatActivity
 //                    startActivity(i);
                 final double dLat = latLng.latitude;
                 final double dLng = latLng.longitude;
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
-
-                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                    i.putExtra(Constants.vLat, dLat);
-                    i.putExtra(Constants.vLng, dLng);
-
-                    startActivity(i);
+                currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if(currentUser.isAnonymous()) {
+                    Toast.makeText(getApplicationContext(), "Anonymous" + currentUser, Toast.LENGTH_LONG).show();
+                    logout();
                 } else {
-                    Toast.makeText(getApplicationContext(), "User not null " + user, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "User not null " + currentUser, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), NewReportActivity.class);
+                    intent.putExtra(Constants.vLat, dLat);
+                    intent.putExtra(Constants.vLng, dLng);
                     startActivity(intent);
                     finish();
                 }
+
+//                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                if (user != null) {
+//                    Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
+//
+//                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+//                    i.putExtra(Constants.vLat, dLat);
+//                    i.putExtra(Constants.vLng, dLng);
+//
+//                    startActivity(i);
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "User not null " + user, Toast.LENGTH_LONG).show();
+//                    Intent intent = new Intent(getApplicationContext(), NewReportActivity.class);
+//                    startActivity(intent);
+//                    finish();
+//                }
             }});
 
 

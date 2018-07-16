@@ -52,23 +52,23 @@ public class Report extends BaseObservable {
         this.source = source;
     }
 
-    public Report(String userId, Double lat, Double lng, String title, String description, String typology,
-                  String picture, List<String> time, String postingDate, List<String> comments, int points, String markerID, String source, String address) {
-        this.userId = userId;
-        this.lat = lat;
-        this.lng = lng;
-        this.title = title;
-        this.description = description;
-        this.typology = typology;
-        this.picture = picture;
-        this.time = time;
-        this.postingDate = postingDate;
-        this.comments = comments;
-        this.points = points;
-        this.markerID = markerID;
-        this.source = source;
-        this.address = address;
-    }
+//    public Report(String userId, Double lat, Double lng, String title, String description, String typology,
+//                  String picture, List<String> time, String postingDate, List<String> comments, int points, String markerID, String source, String address) {
+//        this.userId = userId;
+//        this.lat = lat;
+//        this.lng = lng;
+//        this.title = title;
+//        this.description = description;
+//        this.typology = typology;
+//        this.picture = picture;
+//        this.time = time;
+//        this.postingDate = postingDate;
+//        this.comments = comments;
+//        this.points = points;
+//        this.markerID = markerID;
+//        this.source = source;
+//        this.address = address;
+//    }
 
 
     public String getUserId() {

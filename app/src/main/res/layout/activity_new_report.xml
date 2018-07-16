@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="report" type="com.example.maola.dtourmap.Model.Report"/>
         <variable
             name="handlers"
-            type="com.example.maola.dtourmap.NewReportActivity.NewReportActivity.MyClickHandlers" />
+            type="com.example.maola.dtourmap.reportActivities.NewReportActivity.MyClickHandlers" />
     </data>
 
     <ScrollView
@@ -14,25 +15,27 @@
         android:layout_height="wrap_content"
         android:background="@android:color/background_light"
         android:paddingBottom="25dp"
-        tools:context=".NewReportActivity.NewReportActivity">
+        tools:context=".reportActivities.NewReportActivity">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp">
+            android:layout_margin="4dp"
+            android:layout_marginTop="4dp">
+
             <TextView
                 android:id="@+id/new_repo_tv_title_address"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/text_title"
-                android:textStyle="bold"
-                android:ems="10"
-                android:fontFamily="sans-serif-medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:drawablePadding="8dp"
                 android:drawableStart="@drawable/location_pointer"
+                android:ems="10"
+                android:fontFamily="sans-serif-medium"
                 android:text="@{report.address}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_title"
+                android:textStyle="bold"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="16dp" />
 
@@ -52,6 +55,7 @@
                 android:id="@+id/main_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:layout_marginStart="@dimen/body_padding"
                 android:layout_marginTop="16dp"
                 android:orientation="vertical"
@@ -109,19 +113,22 @@
                 android:id="@+id/timeline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="Timeline"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
 
             <TextView
                 android:id="@+id/textview5"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
                 android:text="@string/insert_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -220,18 +227,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-            <ImageButton
-                android:id="@+id/new_repo_tv_add_picture"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@android:color/darker_gray"
-                android:minHeight="150dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/datePicker1"
-                android:onClick="@{(v) -> handlers.addPhoto()}"
-                app:srcCompat="@android:drawable/ic_input_add" />
-
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
@@ -244,7 +239,7 @@
                 android:textSize="@dimen/text_title"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_add_picture" />
+                app:layout_constraintTop_toBottomOf="@+id/datePicker1" />
 
             <EditText
                 android:id="@+id/new_repo_tv_add_other_info"
@@ -261,16 +256,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
+            <ImageButton
+                android:id="@+id/new_repo_tv_add_picture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:minHeight="150dp"
+                android:onClick="@{(v) -> handlers.addPhoto()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_add_other_info"
+                app:srcCompat="@android:drawable/ic_input_add" />
+
             <Button
                 android:id="@+id/new_repo_btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:onClick="@{(v) -> handlers.onButtonClickWithParam(v, report)}"
-                android:text="Salva"
 
+                android:text="Salva"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_add_other_info" />
+                app:layout_constraintTop_toBottomOf="@+id/new_repo_tv_add_picture" />
 
             <!--<DatePicker-->
             <!--android:id="@+id/datePicker1"-->
