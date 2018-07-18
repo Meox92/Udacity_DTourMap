@@ -3,12 +3,15 @@ package com.example.maola.dtourmap;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maola.dtourmap.Model.Report;
@@ -274,19 +278,19 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-//        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-//        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-//            @Override
-//            public void onInfoWindowClick(Marker marker) {
-//                Toast.makeText(MapActivity.this, "Clicked on snippet" + marker.getTitle() + marker.getId(), Toast.LENGTH_SHORT).show();
-//                Intent i = new Intent(MapActivity.this, ReportDetailActivity.class);
-//                i.putExtra("varMarkerId", marker.getId());
-//                i.putExtra("varIdMarkerDB", result);
-//                startActivity(i);
-//                Log.i("MarkerID", result.get(marker.getId()) + "");
-//
-//            }
-//        });
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(getApplicationContext(), "Clicked on snippet" + marker.getTitle() + marker.getId(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), NewReportActivity.class);
+                i.putExtra("varMarkerId", marker.getId());
+                i.putExtra("varIdMarkerDB", result);
+                startActivity(i);
+                Log.i("MarkerID", result.get(marker.getId()) + "");
+
+            }
+        });
 
 //        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
 
@@ -501,3 +505,68 @@ public class MainActivity extends AppCompatActivity
 
 
 }
+
+class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+
+    private final View mContents;
+
+    CustomInfoWindowAdapter() {
+        mContents = getLayoutInflater().inflate(R.layout.custom_info_contents, null);
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        render(marker, mContents);
+        return mContents;
+    }
+
+
+    private void render(Marker marker, View view) {
+
+        String str = marker.getSnippet();
+        final String[] str2 = str.split("_");
+
+        String title = marker.getTitle();
+        TextView titleUi = ((TextView) view.findViewById(R.id.info_title));
+        if (title != null) {
+            // Spannable string allows us to edit the formatting of the text.
+            SpannableString titleText = new SpannableString(title);
+            titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
+            titleUi.setText(titleText);
+        } else {
+            titleUi.setText("");
+        }
+
+        TextView snippetUi = ((TextView)view.findViewById(R.id.info_date));
+        if (str2[1] != null) {
+            SpannableString snippetText = new SpannableString(time);
+            snippetText.setSpan(new ForegroundColorSpan(Color.MAGENTA), 0, 10, 0);
+//                snippetText.setSpan(new ForegroundColorSpan(Color.BLUE), 12, str2.length, 0);
+            snippetUi.setText(str2[1]);
+        } else {
+            snippetUi.setText("");
+        }
+
+        TextView txtDescription = (TextView)view.findViewById(R.id.info_description);
+        if(str2.length>2){
+            txtDescription.setText(str2[2]);
+        } else {
+            txtDescription.setText("Description not available");
+        }
+
+        TextView txtPoint = (TextView)view.findViewById(R.id.info_points);
+        txtPoint.setText(str2[0]);
+
+    }
+
+
+}
+
+}
+

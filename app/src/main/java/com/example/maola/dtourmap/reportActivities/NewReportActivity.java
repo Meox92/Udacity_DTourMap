@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -145,6 +146,12 @@ public class NewReportActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        removePicture();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -232,6 +239,24 @@ public class NewReportActivity extends AppCompatActivity {
         }
     }
 
+    private void removePicture() {
+        if(reportPic != null) {
+            riversRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // File deleted successfully
+                    Log.d("Deleting file", "onSuccess: deleted file");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Uh-oh, an error occurred!
+                    Log.d("Deleting file", "onFailure: did not delete file");
+                }
+            });
+        }
+    }
+
     private void setMandatoryField() {
         // Avoid app crash because of DB
         report.setLat(0.0d);
@@ -291,7 +316,6 @@ public class NewReportActivity extends AppCompatActivity {
             setDataToPush();
 
             myRef.child(markerID).setValue(report);
-
             Toast.makeText(getApplicationContext(), "Button clicked! Name: " + report.description + " title var: ", Toast.LENGTH_SHORT).show();
         }
     }
