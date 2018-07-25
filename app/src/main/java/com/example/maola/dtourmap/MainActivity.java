@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.maola.dtourmap.Model.InfoWindowData;
 import com.example.maola.dtourmap.Model.Report;
 import com.example.maola.dtourmap.reportActivities.NewReportActivity;
 import com.example.maola.dtourmap.UserActivity.LoginActivity;
@@ -51,9 +52,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.example.maola.dtourmap.Utility.StringUtils.getDate;
+import static java.text.DateFormat.getDateTimeInstance;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -83,6 +92,8 @@ public class MainActivity extends AppCompatActivity
     private HashMap<String, Object> result;
     private List<Report> lSegnalazioni;
     private Report report1;
+    private String description, time;
+
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -104,6 +115,7 @@ public class MainActivity extends AppCompatActivity
 
         // Setup UI
         setupUI();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -292,7 +304,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-//        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
+        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
 
 
         mMap.setOnMyLocationButtonClickListener(this);
@@ -310,8 +322,8 @@ public class MainActivity extends AppCompatActivity
 //                    i.putExtra(Constants.vLng, dLng);
 //
 //                    startActivity(i);
-                final double dLat = latLng.latitude;
-                final double dLng = latLng.longitude;
+                double dLat = latLng.latitude;
+                double dLng = latLng.longitude;
                 currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(currentUser.isAnonymous()) {
                     Toast.makeText(getApplicationContext(), "Anonymous" + currentUser, Toast.LENGTH_LONG).show();
@@ -426,85 +438,75 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void reportListener(){
-        lSegnalazioni = new ArrayList<Report>();
-//        listaChiavi = new ArrayList<>();
-//        final List<String> stringList = new ArrayList<>();
-//        result = new HashMap<>();
-
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapSegnalazioni : dataSnapshot.getChildren()) {
-                    lSegnalazioni.add(snapSegnalazioni.getValue(Report.class));
-//                    reportIdObj = snapSegnalazioni.getKey();
-//                    listaChiavi.add(reportIdObj);
-
+                    Report report2 = snapSegnalazioni.getValue(Report.class);
+                    markerID = setMarkerColor(report2, report2.getTypology());
                     //TODO creare modalità lista
-                }
-                for(int i = 0; i< lSegnalazioni.size(); i++){
-                    report1 = lSegnalazioni.get(i);
-                    String typology = report1.getTypology();
-//                    String description = report1.getDescription();
-//                    String time = report1.getPostingDate();
-
-//                    mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
-//                    ).title(report1.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-//                    setMarkerColor(report1, typology);
-                    markerID = setMarkerColor(report1, typology);
-
-//                    result.put(markerID.getId(), listaChiavi.get(i));
-//                    Log.i("TAG", result.toString());
-
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_LONG).show();
             }
 
         });
     }
 
+
+
     public Marker setMarkerColor(Report report1, String category){
         Marker mRenderedMarker;
-        String snippetString =report1.getPostingDate();
+        String snippetString = "snippet1_snippet2_snippet3_snippet4";
+        long postingDate = report1.getPostingDate();
+//        String snippetString = getDate(postingDate, "dd/MM/yyyy hh:mm");
+        InfoWindowData info = new InfoWindowData();
+        info.setAddress(report1.getAddress());
+        info.setPostingDate(getDate(postingDate, "dd/MM/yyyy hh:mm"));
+        info.setReportDate(getDate(report1.getReportDate(), "dd/MM/yyyy"));
+        info.setUserName(report1.getUserName());
+        if(report1.getDescription() != null) {
+            info.setDescription(report1.getDescription());
+        }
 
 
         if(category.equals(getString(R.string.spaccio))){
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
-            ).title(report1.getTitle())
+            ).title(report1.getAddress())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                     .snippet(snippetString));
         }
         else if(category.equals(getString(R.string.furto))){
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
-            ).title(report1.getTitle())
+            ).title(report1.getAddress())
                     .snippet(snippetString)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         } else if(category.equals(getString(R.string.vandalismo))){
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
-            ).title(report1.getTitle())
+            ).title(report1.getAddress())
                     .snippet(snippetString)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
         } else if(category.equals(getString(R.string.altro))){
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
-            ).title(report1.getTitle())
+            ).title(report1.getAddress())
                     .snippet(snippetString)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-        }else{
-            Log.i("MapsActivity", "Errore");
+        }else {
+            Log.i(TAG, "Errore");
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
-            ).title(report1.getAddress())
+            ).title("errore")
                     .snippet("non disp1_non disp2_non disp3"));
         }
-
+        mRenderedMarker.setTag(info);
         return mRenderedMarker;
     }
 
 
-}
+
 
 class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -530,10 +532,16 @@ class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private void render(Marker marker, View view) {
 
         String str = marker.getSnippet();
-        final String[] str2 = str.split("_");
+        Log.i("Marker snippet", str);
+//        final String[] str2 = str.split("_");
 
         String title = marker.getTitle();
-        TextView titleUi = ((TextView) view.findViewById(R.id.info_title));
+
+        TextView titleUi = (TextView) view.findViewById(R.id.info_address);
+        TextView postedBy = (TextView)view.findViewById(R.id.info_posted_by);
+        TextView info_date = (TextView) view.findViewById(R.id.info_date);
+        TextView info_detail = (TextView) view.findViewById(R.id.info_detail);
+
         if (title != null) {
             // Spannable string allows us to edit the formatting of the text.
             SpannableString titleText = new SpannableString(title);
@@ -542,31 +550,19 @@ class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         } else {
             titleUi.setText("");
         }
+        info_date.setText(str);
 
-        TextView snippetUi = ((TextView)view.findViewById(R.id.info_date));
-        if (str2[1] != null) {
-            SpannableString snippetText = new SpannableString(time);
-            snippetText.setSpan(new ForegroundColorSpan(Color.MAGENTA), 0, 10, 0);
-//                snippetText.setSpan(new ForegroundColorSpan(Color.BLUE), 12, str2.length, 0);
-            snippetUi.setText(str2[1]);
-        } else {
-            snippetUi.setText("");
-        }
+        InfoWindowData infoWindowData = (InfoWindowData) marker.getTag();
 
-        TextView txtDescription = (TextView)view.findViewById(R.id.info_description);
-        if(str2.length>2){
-            txtDescription.setText(str2[2]);
-        } else {
-            txtDescription.setText("Description not available");
-        }
-
-        TextView txtPoint = (TextView)view.findViewById(R.id.info_points);
-        txtPoint.setText(str2[0]);
-
+        postedBy.setText("Segnalato il " + infoWindowData.getPostingDate() + "da " + infoWindowData.getUserName());
+        info_date.setText(infoWindowData.getReportDate().toString());
+        info_detail.setText(infoWindowData.getDescription());
     }
 
 
 }
 
 }
+
+
 

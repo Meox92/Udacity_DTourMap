@@ -1,5 +1,6 @@
 package com.example.maola.dtourmap.reportActivities;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,24 +25,29 @@ import com.example.maola.dtourmap.R;
 import com.example.maola.dtourmap.UserActivity.LoginActivity;
 import com.example.maola.dtourmap.Utility.Constants;
 import com.example.maola.dtourmap.Utility.FirebaseUtils;
+import com.example.maola.dtourmap.Utility.StringUtils;
 import com.example.maola.dtourmap.databinding.ActivityNewReportBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class NewReportActivity extends AppCompatActivity {
 
@@ -57,9 +64,11 @@ public class NewReportActivity extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference myRef;
     private String markerID;
-    private List<String> categoryArray;
+//    private List<String> categoryArray;
     private Uri reportPic;
     private String urlReportPic;
+    private DatePickerDialog datePickerDialog;
+
 
 
 
@@ -84,18 +93,8 @@ public class NewReportActivity extends AppCompatActivity {
         getAddress(); // move to async tasks loader
 
 
-//        binding.newRepoBtnSave.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getApplicationContext(), "Save button clicked!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-        categoryArray = Arrays.asList("Seleziona una categoria", "Furto", "Scippo", "Vandalismo", "Spaccio");
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, categoryArray);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.categorySpinner.setAdapter(arrayAdapter);
+        setupUI();
 
         /*-----------------USER INSTANCE----------------------*/
         //get firebase auth instance
@@ -163,7 +162,53 @@ public class NewReportActivity extends AppCompatActivity {
         }
     }
 
+    public void setupUI() {
+        // Category spinner
+//        categoryArray = Arrays.asList("Seleziona una categoria", "Furto", "Scippo", "Vandalismo", "Spaccio", "Altro");
 
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, Constants.categoryArray);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.categorySpinner.setAdapter(arrayAdapter);
+
+        //Date Button
+        Calendar c = Calendar.getInstance();
+        String currentDay = StringUtils.getDate(c.getTimeInMillis(), "dd/MM/yyyy");
+        binding.newRepoSetDate.setText(currentDay);
+        binding.newRepoSetDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // calender class's instance and get current date , month and year from calender
+                // Set default time(current day)
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+
+
+                // date picker dialog
+                datePickerDialog = new DatePickerDialog(NewReportActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                String dateString = dayOfMonth + "/"
+                                        + (monthOfYear + 1) + "/" + year;
+                                binding.newRepoSetDate.setText(dateString);
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.set(view.getYear(), view.getMonth(), view.getDayOfMonth(),
+                0, 0, 0);
+                                long startTime = calendar.getTimeInMillis();
+                                report.setReportDate(startTime);
+                            }
+                        }, mYear, mMonth, mDay);
+
+                datePickerDialog.show();
+            }
+        });
+    }
 
 
     public void setThumbnail(Intent data) {
@@ -190,12 +235,10 @@ public class NewReportActivity extends AppCompatActivity {
     private void uploadFile() {
         //if there is a file to upload
         if (reportPic != null) {
-
             //displaying a progress dialog while upload is going on
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading");
             progressDialog.show();
-
 
             riversRef.putFile(reportPic)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -261,7 +304,11 @@ public class NewReportActivity extends AppCompatActivity {
         // Avoid app crash because of DB
         report.setLat(0.0d);
         report.setLng(0.0d);
-        report.setTypology("N.D.");
+        report.setUserId("0");
+        report.setUserName("");
+        report.setTypology("Seleziona una categoria!");
+        Calendar calendar = Calendar.getInstance();
+        report.setReportDate(calendar.getTimeInMillis());
     }
 
     public void setDataToPush() {
@@ -270,11 +317,14 @@ public class NewReportActivity extends AppCompatActivity {
         report.setLat(mLat);
         report.setLng(mLng);
         report.setMarkerID(markerID);
-        Date currentTime = Calendar.getInstance().getTime();
-        report.setPostingDate(currentTime.toString());
+        Calendar calendar = Calendar.getInstance();
+        long startTime = calendar.getTimeInMillis();
+        report.setPostingDate(startTime);
+        report.setUserId(user.getUid());
+        report.setUserName(user.getDisplayName());
 
         String selectedCategory = String.valueOf(binding.categorySpinner.getSelectedItem());
-        if(selectedCategory.equals(categoryArray.get(0))) {
+        if(selectedCategory.equals(Constants.categoryArray.get(0))) {
             ((TextView)binding.categorySpinner.getSelectedView()).setError("Seleziona una categoria!");
             return;
         } else {
@@ -314,10 +364,11 @@ public class NewReportActivity extends AppCompatActivity {
 
         public void onButtonClickWithParam(View view, Report report) {
             setDataToPush();
-
             myRef.child(markerID).setValue(report);
-            Toast.makeText(getApplicationContext(), "Button clicked! Name: " + report.description + " title var: ", Toast.LENGTH_SHORT).show();
+            onBackPressed();
         }
+
+
     }
 
 }

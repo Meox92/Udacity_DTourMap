@@ -6,51 +6,53 @@ import android.databinding.BaseObservable;
 
 import com.android.databinding.library.baseAdapters.BR;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Maola on 07/08/2017.
  */
 
 public class Report extends BaseObservable {
+    private String userId;
+    private String userName;
+    private String title;
+    private String description;
+    private String typology;
+    private String picture;
 
-
-
-    public String userId;
-    public String title;
-    public String description;
-    public String typology;
-    public String picture;
-
-    public String markerID;
-    public Double lat, lng;
-    public String address;
-    public List<String> time;
+    private String markerID;
+    private Double lat, lng;
+    private String address;
+    private List<String> time;
+    private long reportDate;
     //Data di segnalazione
-    public String postingDate;
-    public List<String> comments;
-    public String source;
-    public int points;
+    private long postingDate;
+    private List<String> comments;
+    private String source;
+    private int points;
 
     public Report(){}
 
 
-    public Report(String userId, Double lat, Double lng, String title, String description, String typology, String picture, List<String> time,
-                  String postingDate, int points, String markerID, String source) {
-        this.userId = userId;
-        this.lat = lat;
-        this.lng = lng;
-        this.title = title;
-        this.description = description;
-        this.typology = typology;
-        this.picture = picture;
-        this.time = time;
-        this.postingDate = postingDate;
-//        this.comments = comments;
-        this.points = points;
-        this.markerID = markerID;
-        this.source = source;
-    }
+//    public Report(String userId, Double lat, Double lng, String title, String description, String typology, String picture, List<String> time,
+//                  String postingDate, int points, String markerID, String source) {
+//        this.userId = userId;
+//        this.lat = lat;
+//        this.lng = lng;
+//        this.title = title;
+//        this.description = description;
+//        this.typology = typology;
+//        this.picture = picture;
+//        this.time = time;
+//        this.postingDate = postingDate;
+////        this.comments = comments;
+//        this.points = points;
+//        this.markerID = markerID;
+//        this.source = source;
+//    }
 
 //    public Report(String userId, Double lat, Double lng, String title, String description, String typology,
 //                  String picture, List<String> time, String postingDate, List<String> comments, int points, String markerID, String source, String address) {
@@ -139,11 +141,11 @@ public class Report extends BaseObservable {
         this.time = time;
     }
 
-    public String getPostingDate() {
+    public long getPostingDate() {
         return postingDate;
     }
 
-    public void setPostingDate(String postingDate) {
+    public void setPostingDate(long postingDate) {
         this.postingDate = postingDate;
     }
 
@@ -178,5 +180,21 @@ public class Report extends BaseObservable {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public long getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(long reportDate) {
+        this.reportDate = reportDate;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
