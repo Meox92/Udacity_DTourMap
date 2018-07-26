@@ -30,7 +30,6 @@ public class Report extends BaseObservable {
     private long reportDate;
     //Data di segnalazione
     private long postingDate;
-    private List<String> comments;
     private String source;
     private int points;
 

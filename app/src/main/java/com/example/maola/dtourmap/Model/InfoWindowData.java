@@ -9,6 +9,10 @@ public class InfoWindowData {
     private String time;
     private String reportDate;
 
+
+
+    private String reportId;
+
     public String getUserName() {
         return userName;
     }
@@ -60,6 +64,13 @@ public class InfoWindowData {
         this.reportDate = reportDate;
     }
 
+    public String getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(String reportId) {
+        this.reportId = reportId;
+    }
 
 
 }

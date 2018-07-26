@@ -32,6 +32,7 @@ import com.example.maola.dtourmap.UserActivity.LoginActivity;
 import com.example.maola.dtourmap.Utility.Constants;
 import com.example.maola.dtourmap.Utility.FirebaseUtils;
 import com.example.maola.dtourmap.Utility.PermissionUtils;
+import com.example.maola.dtourmap.reportActivities.ReportDetailActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -76,15 +77,15 @@ public class MainActivity extends AppCompatActivity
     private Location mLastKnownLocation;
     private boolean mPermissionDenied = false;
     private boolean mLocationPermissionGranted;
-    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-        @Override
-        public void onMyLocationChange(Location location) {
-            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-            if (mMap != null) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-            }
-        }
-    };
+//    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
+//        @Override
+//        public void onMyLocationChange(Location location) {
+//            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+//            if (mMap != null) {
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+//            }
+//        }
+//    };
     private DatabaseReference myRef;
     private Object reportIdObj;
     private List<Object> listaChiavi;
@@ -203,12 +204,12 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
     private void getUserStatus(){
         // Get User instance
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if(currentUser == null) {
             Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
@@ -295,16 +296,18 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Toast.makeText(getApplicationContext(), "Clicked on snippet" + marker.getTitle() + marker.getId(), Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), NewReportActivity.class);
-                i.putExtra("varMarkerId", marker.getId());
-                i.putExtra("varIdMarkerDB", result);
+                Intent i = new Intent(getApplicationContext(), ReportDetailActivity.class);
+                InfoWindowData infoWindowData = (InfoWindowData) marker.getTag();
+                String reportId = infoWindowData.getReportId();
+                i.putExtra(Constants.reportId, reportId);
+//                i.putExtra("varMarkerId", marker.getId());
+//                i.putExtra("varIdMarkerDB", result);
                 startActivity(i);
-                Log.i("MarkerID", result.get(marker.getId()) + "");
 
             }
         });
 
-        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
+//        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
 
 
         mMap.setOnMyLocationButtonClickListener(this);
@@ -469,6 +472,7 @@ public class MainActivity extends AppCompatActivity
         info.setPostingDate(getDate(postingDate, "dd/MM/yyyy hh:mm"));
         info.setReportDate(getDate(report1.getReportDate(), "dd/MM/yyyy"));
         info.setUserName(report1.getUserName());
+        info.setReportId(report1.getMarkerID());
         if(report1.getDescription() != null) {
             info.setDescription(report1.getDescription());
         }
