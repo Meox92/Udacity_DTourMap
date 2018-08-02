@@ -4,11 +4,10 @@ import java.util.Date;
 
 public class InfoWindowData {
     private String address;
-    private String description;
     private String postingDate;
     private String time;
+    private String category;
     private String reportDate;
-
 
 
     private String reportId;
@@ -23,7 +22,6 @@ public class InfoWindowData {
 
     private String userName;
 
-
     public String getAddress() {
         return address;
     }
@@ -32,13 +30,6 @@ public class InfoWindowData {
         this.address = address;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getPostingDate() {
         return postingDate;
@@ -70,6 +61,14 @@ public class InfoWindowData {
 
     public void setReportId(String reportId) {
         this.reportId = reportId;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
 

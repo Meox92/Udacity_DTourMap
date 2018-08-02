@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,22 +36,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class NewReportActivity extends AppCompatActivity {
 
@@ -206,7 +202,7 @@ public class NewReportActivity extends AppCompatActivity {
 
         //Date Button
         Calendar c = Calendar.getInstance();
-        String currentDay = StringUtils.getDate(c.getTimeInMillis(), "dd/MM/yyyy");
+        String currentDay = StringUtils.getDate(c.getTimeInMillis(), false);
         binding.newRepoSetDate.setText(currentDay);
         binding.newRepoSetDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,10 +250,7 @@ public class NewReportActivity extends AppCompatActivity {
     private void uploadFile() {
         //if there is a file to upload
         if (reportPic != null) {
-            //displaying a progress dialog while upload is going on
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading");
-            progressDialog.show();
+            binding.progressBar.setVisibility(View.VISIBLE);
 
              riversRef.putFile(reportPic)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -269,8 +262,8 @@ public class NewReportActivity extends AppCompatActivity {
                             Log.i(TAG, "picture loaded " + markerID);
 
 
+                            binding.progressBar.setVisibility(View.GONE);
 
-                            progressDialog.dismiss();
                             //and displaying a success toast
                             Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
                         }
@@ -280,7 +273,8 @@ public class NewReportActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception exception) {
                             //if the upload is not successfull
                             //hiding the progress dialog
-                            progressDialog.dismiss();
+                            binding.progressBar.setVisibility(View.GONE);
+
 
                             //and displaying error message
                             Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
@@ -293,7 +287,8 @@ public class NewReportActivity extends AppCompatActivity {
                             @SuppressWarnings("VisibleForTests") double progress = (100.0 * taskSnapshot.getBytesTransferred());
 
                             //displaying percentage in progress dialog
-                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                            binding.progressBar.setProgress((int)progress);
+
                         }
                     });
         }
@@ -327,7 +322,7 @@ public class NewReportActivity extends AppCompatActivity {
         report.setLng(0.0d);
         report.setUserId("0");
         report.setUserName("");
-        report.setTypology("Seleziona una categoria!");
+        report.setCategory("Seleziona una categoria!");
         Calendar calendar = Calendar.getInstance();
         report.setReportDate(calendar.getTimeInMillis());
     }
@@ -351,7 +346,7 @@ public class NewReportActivity extends AppCompatActivity {
             ((TextView)binding.categorySpinner.getSelectedView()).setError("Seleziona una categoria!");
             return;
         } else {
-            report.setTypology(selectedCategory);
+            report.setCategory(selectedCategory);
         }
         List <String> time = new ArrayList<>();
         CheckBox[] checkBoxes2 = {binding.checkBox, binding.checkBox2, binding.checkBox3, binding.checkBox4, binding.checkBox5, binding.checkBox6};

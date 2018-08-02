@@ -20,7 +20,7 @@ public class Report extends BaseObservable {
     private String userName;
     private String title;
     private String description;
-    private String typology;
+    private String category;
     private String picture;
 
     private String markerID;
@@ -66,12 +66,12 @@ public class Report extends BaseObservable {
         this.description = description;
     }
 
-    public String getTypology() {
-        return typology;
+    public String getCategory() {
+        return category;
     }
 
-    public void setTypology(String typology) {
-        this.typology = typology;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getPicture() {
@@ -113,7 +113,6 @@ public class Report extends BaseObservable {
     public void setPostingDate(long postingDate) {
         this.postingDate = postingDate;
     }
-
 
     public int getPoints() {
         return points;

@@ -3,15 +3,12 @@ package com.example.maola.dtourmap;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,7 +17,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,14 +49,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.maola.dtourmap.Utility.StringUtils.getDate;
 import static java.text.DateFormat.getDateTimeInstance;
@@ -87,17 +77,17 @@ public class MainActivity extends AppCompatActivity
 //        }
 //    };
     private DatabaseReference myRef;
-    private Object reportIdObj;
-    private List<Object> listaChiavi;
-    private Marker markerID;
-    private HashMap<String, Object> result;
-    private List<Report> lSegnalazioni;
-    private Report report1;
-    private String description, time;
-
-
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+//    private Object reportIdObj;
+//    private List<Object> listaChiavi;
+//    private Marker markerID;
+//    private HashMap<String, Object> result;
+//    private List<Report> lSegnalazioni;
+//    private Report report1;
+//    private String description, time;
+//
+//
+//    private FirebaseAuth firebaseAuth;
+//    private FirebaseAuth.AuthStateListener mAuthListener;
     private final String TAG = "2MainActivity";
     private FirebaseUser currentUser;
     private Toolbar toolbar;
@@ -208,15 +198,15 @@ public class MainActivity extends AppCompatActivity
 
     private void getUserStatus(){
         // Get User instance
-        firebaseAuth = FirebaseAuth.getInstance();
+//        firebaseAuth = FirebaseAuth.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if(currentUser == null) {
-            Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
             finish();
         } else if(currentUser.isAnonymous()) {
-            Toast.makeText(getApplicationContext(), "User isAnonymous", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.enter_anon), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getApplicationContext(), currentUser.getEmail(), Toast.LENGTH_LONG).show();
         }
@@ -252,9 +242,7 @@ public class MainActivity extends AppCompatActivity
 
                         startActivity(i);
                     } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Impossibile trovare la posizione corrente, premi un paio di secondi sulla " +
-                                        "mappa per aggiungere un nuovo report", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),getString(R.string.no_current_position),Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -297,14 +285,14 @@ public class MainActivity extends AppCompatActivity
             public void onInfoWindowClick(Marker marker) {
                 Intent i = new Intent(getApplicationContext(), ReportDetailActivity.class);
                 InfoWindowData infoWindowData = (InfoWindowData) marker.getTag();
-                String reportId = infoWindowData.getReportId();
-                i.putExtra(Constants.reportId, reportId);
-                startActivity(i);
+                if(infoWindowData != null) {
+                    String reportId = infoWindowData.getReportId();
+                    i.putExtra(Constants.reportId, reportId);
+                    startActivity(i);
+                }
 
             }
         });
-
-//        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
 
 
         mMap.setOnMyLocationButtonClickListener(this);
@@ -316,11 +304,9 @@ public class MainActivity extends AppCompatActivity
                 double dLat = latLng.latitude;
                 double dLng = latLng.longitude;
                 currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if(currentUser.isAnonymous()) {
-                    Toast.makeText(getApplicationContext(), "Anonymous" + currentUser, Toast.LENGTH_LONG).show();
+                if(currentUser != null && currentUser.isAnonymous()) {
                     logout();
                 } else {
-                    Toast.makeText(getApplicationContext(), "User not null " + currentUser, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), NewReportActivity.class);
                     intent.putExtra(Constants.vLat, dLat);
                     intent.putExtra(Constants.vLng, dLng);
@@ -393,25 +379,25 @@ public class MainActivity extends AppCompatActivity
             mPermissionDenied = true;
         }
     }
-
-    private void updateLocationUI() {
-        if (mMap == null) {
-            return;
-        }
-        try {
-            if (mLocationPermissionGranted) {
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            } else {
-                mMap.setMyLocationEnabled(false);
-                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mLastKnownLocation = null;
-                checkLocationPermission();
-            }
-        } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
-        }
-    }
+//
+//    private void updateLocationUI() {
+//        if (mMap == null) {
+//            return;
+//        }
+//        try {
+//            if (mLocationPermissionGranted) {
+//                mMap.setMyLocationEnabled(true);
+//                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+//            } else {
+//                mMap.setMyLocationEnabled(false);
+//                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+//                mLastKnownLocation = null;
+//                checkLocationPermission();
+//            }
+//        } catch (SecurityException e)  {
+//            Log.e("Exception: %s", e.getMessage());
+//        }
+//    }
 
     public void reportListener(){
 
@@ -420,7 +406,8 @@ public class MainActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapSegnalazioni : dataSnapshot.getChildren()) {
                     Report report2 = snapSegnalazioni.getValue(Report.class);
-                    markerID = setMarkerColor(report2, report2.getTypology());
+
+                    setMarkerColor(report2, report2.getCategory());
                     //TODO create list view
                 }
             }
@@ -442,13 +429,12 @@ public class MainActivity extends AppCompatActivity
 //        String snippetString = getDate(postingDate, "dd/MM/yyyy hh:mm");
         InfoWindowData info = new InfoWindowData();
         info.setAddress(report1.getAddress());
-        info.setPostingDate(getDate(postingDate, "dd/MM/yyyy hh:mm"));
-        info.setReportDate(getDate(report1.getReportDate(), "dd/MM/yyyy"));
+        info.setPostingDate(getDate(postingDate, true));
+        info.setReportDate(getDate(report1.getReportDate(), false));
         info.setUserName(report1.getUserName());
         info.setReportId(report1.getMarkerID());
-        if(report1.getDescription() != null) {
-            info.setDescription(report1.getDescription());
-        }
+        info.setCategory(report1.getCategory());
+
 
 
         if(category.equals(getString(R.string.spaccio))){
@@ -484,7 +470,6 @@ public class MainActivity extends AppCompatActivity
 
 
 
-
 class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
 
@@ -509,31 +494,18 @@ class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private void render(Marker marker, View view) {
 
         String str = marker.getSnippet();
-        Log.i("Marker snippet", str);
-//        final String[] str2 = str.split("_");
-
-        String title = marker.getTitle();
 
         TextView titleUi = (TextView) view.findViewById(R.id.info_address);
         TextView postedBy = (TextView)view.findViewById(R.id.info_posted_by);
         TextView info_date = (TextView) view.findViewById(R.id.info_date);
-        TextView info_detail = (TextView) view.findViewById(R.id.info_detail);
 
-        if (title != null) {
-            // Spannable string allows us to edit the formatting of the text.
-            SpannableString titleText = new SpannableString(title);
-            titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
-            titleUi.setText(titleText);
-        } else {
-            titleUi.setText("");
-        }
+        titleUi.setText(marker.getTitle());
+
         info_date.setText(str);
 
         InfoWindowData infoWindowData = (InfoWindowData) marker.getTag();
-
-        postedBy.setText("Segnalato il " + infoWindowData.getPostingDate() + "da " + infoWindowData.getUserName());
-        info_date.setText(infoWindowData.getReportDate().toString());
-        info_detail.setText(infoWindowData.getDescription());
+        postedBy.setText(getString(R.string.posted_on).concat(infoWindowData.getPostingDate()).concat(getString(R.string.by)).concat(infoWindowData.getUserName()));
+        info_date.setText(infoWindowData.getCategory() + ", " + infoWindowData.getReportDate());
     }
 
 

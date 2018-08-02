@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,11 +32,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText loginETPassword;
     private Button loginBtnSignIp;
     private TextView loginTxtNewUser;
-    private CheckBox loginCbRemember;
-    private SharedPreferences sharedPreferences;
-    private String SHARED_PREF = "PREF_LOGIN";
     private ProgressDialog progressDialog;
     private Button loginBtnAnon;
+    private ProgressBar progressBar;
 
 
 
@@ -50,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtnSignIp = (Button)findViewById(R.id.login__btn_signin);
         loginTxtNewUser = (TextView)findViewById(R.id.login_edt_new_user);
         loginBtnAnon = (Button)findViewById(R.id.login_btn_anonimo);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = getIntent();
         boolean isAnon = i.getBooleanExtra(Constants.show_anonymous, true);
         if(!isAnon) {
-            loginBtnAnon.setText("No grazie, continua come ospite");
+            loginBtnAnon.setText(getString(R.string.continue_anon));
             loginBtnAnon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -114,8 +114,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn(String email, String password){
-        progressDialog = ProgressDialog.show(LoginActivity.this, "Login in progress",
-                "", true);
+//        progressDialog = ProgressDialog.show(LoginActivity.this, getString(R.string.login_in_progress),
+//                "", true);
+        progressBar.setVisibility(View.VISIBLE);
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -137,15 +139,16 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
 
                         }
-                        progressDialog.dismiss();
+                        progressBar.setVisibility(View.GONE);
 
                     }
                 });
     }
 
     private void signInAnonymously() {
-        progressDialog = ProgressDialog.show(LoginActivity.this, "Login in progress",
-                "Entro come ospite", true);
+//        progressDialog = ProgressDialog.show(LoginActivity.this, getString(R.string.login_in_progress),
+//                getString(R.string.enter_anon), true);
+        progressBar.setVisibility(View.VISIBLE);
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -159,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "Failed : ", task.getException());
                             Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
-                        progressDialog.dismiss();
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
@@ -190,17 +193,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO possibilità di registrarsi
-//                Intent i = new Intent(LoginActivity.this, NewUserActivity.class);
-//                startActivity(i);
-//                finish();
+                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(i);
+                finish();
             }
         });
     }
-
-    private void setupAnonymousMode(boolean isAnon) {
-
-    }
-
 
 
 }

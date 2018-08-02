@@ -79,11 +79,11 @@ public class ReportDetailActivity extends AppCompatActivity {
                         }
                     }
                     if(dataSnapshot.hasChild("postingDate")) {
-                       String dateFormatted =  StringUtils.getDate(report.getPostingDate(), "dd/MM/yyyy hh:mm");
+                       String dateFormatted =  StringUtils.getDate(report.getPostingDate(), true);
                         binding.newRepoTvAuthor.setText("Postato da " + report.getUserName() + " il " + dateFormatted);
                     }
                     if(dataSnapshot.hasChild("reportDate")) {
-                        String dateFormatted = StringUtils.getDate(report.getReportDate(), "dd/MM/yyyy");
+                        String dateFormatted = StringUtils.getDate(report.getReportDate(), false);
                         binding.newRepoSetDate.setText(dateFormatted);
                     }
                     if(dataSnapshot.hasChild("picture")) {
