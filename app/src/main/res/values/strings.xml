@@ -27,7 +27,18 @@
     <string name="spaccio">Spaccio</string>
     <string name="altro">Altro</string>
     <string name="insert_time">Inserisci la fascia oraria (puoi inserirne più d\'una) e giorno in cui è avvenuto il fatto</string>
+    <!--TIME SLOT-->
+    <string name="time_slot_0_4">00–04</string>
+    <string name="time_slot_4_8">04–08</string>
+    <string name="time_slot_8_12">08–12</string>
+    <string name="time_slot_12_16">12–16</string>
+    <string name="time_slot_16_20">16–20</string>
+    <string name="time_slot_20_24">20–00</string>
 
+
+
+
+    <!--USER-->
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="new_user">New User?</string>
@@ -39,5 +50,7 @@
     <string name="auth_failed">Authentication failed!</string>
     <string name="insert_email_error">Insert an email!</string>
     <string name="insert_password_error">Insert a password!</string>
+    <string name="other_info">Altre informazioni</string>
+    <string name="timeline">Timeline</string>
 
 </resources>

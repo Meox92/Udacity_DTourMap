@@ -28,48 +28,14 @@ public class Report extends BaseObservable {
     private String address;
     private List<String> time;
     private long reportDate;
+    private String sReportDate;
     //Data di segnalazione
     private long postingDate;
+    private String sPostingDate;
     private String source;
     private int points;
 
     public Report(){}
-
-
-//    public Report(String userId, Double lat, Double lng, String title, String description, String typology, String picture, List<String> time,
-//                  String postingDate, int points, String markerID, String source) {
-//        this.userId = userId;
-//        this.lat = lat;
-//        this.lng = lng;
-//        this.title = title;
-//        this.description = description;
-//        this.typology = typology;
-//        this.picture = picture;
-//        this.time = time;
-//        this.postingDate = postingDate;
-////        this.comments = comments;
-//        this.points = points;
-//        this.markerID = markerID;
-//        this.source = source;
-//    }
-
-//    public Report(String userId, Double lat, Double lng, String title, String description, String typology,
-//                  String picture, List<String> time, String postingDate, List<String> comments, int points, String markerID, String source, String address) {
-//        this.userId = userId;
-//        this.lat = lat;
-//        this.lng = lng;
-//        this.title = title;
-//        this.description = description;
-//        this.typology = typology;
-//        this.picture = picture;
-//        this.time = time;
-//        this.postingDate = postingDate;
-//        this.comments = comments;
-//        this.points = points;
-//        this.markerID = markerID;
-//        this.source = source;
-//        this.address = address;
-//    }
 
 
     public String getUserId() {
@@ -196,4 +162,21 @@ public class Report extends BaseObservable {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public String getsReportDate() {
+        return sReportDate;
+    }
+
+    public void setsReportDate(String sReportDate) {
+        this.sReportDate = sReportDate;
+    }
+
+    public String getsPostingDate() {
+        return sPostingDate;
+    }
+
+    public void setsPostingDate(String sPostingDate) {
+        this.sPostingDate = sPostingDate;
+    }
+
 }

@@ -158,27 +158,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -295,13 +295,10 @@ public class MainActivity extends AppCompatActivity
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(getApplicationContext(), "Clicked on snippet" + marker.getTitle() + marker.getId(), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getApplicationContext(), ReportDetailActivity.class);
                 InfoWindowData infoWindowData = (InfoWindowData) marker.getTag();
                 String reportId = infoWindowData.getReportId();
                 i.putExtra(Constants.reportId, reportId);
-//                i.putExtra("varMarkerId", marker.getId());
-//                i.putExtra("varIdMarkerDB", result);
                 startActivity(i);
 
             }
@@ -316,15 +313,6 @@ public class MainActivity extends AppCompatActivity
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-
-//                Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
-//                    double dLat = latLng.latitude;
-//                    double dLng = latLng.longitude;
-//                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-//                    i.putExtra(Constants.vLat, dLat);
-//                    i.putExtra(Constants.vLng, dLng);
-//
-//                    startActivity(i);
                 double dLat = latLng.latitude;
                 double dLng = latLng.longitude;
                 currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -339,22 +327,6 @@ public class MainActivity extends AppCompatActivity
                     startActivity(intent);
                     finish();
                 }
-
-//                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                if (user != null) {
-//                    Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
-//
-//                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-//                    i.putExtra(Constants.vLat, dLat);
-//                    i.putExtra(Constants.vLng, dLng);
-//
-//                    startActivity(i);
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "User not null " + user, Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(getApplicationContext(), NewReportActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//                }
             }});
 
 
@@ -372,7 +344,8 @@ public class MainActivity extends AppCompatActivity
                             mLastKnownLocation = location;
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), 16.00f));                        }
+                                            mLastKnownLocation.getLongitude()), 16.00f));
+                        }
                     }
                 });
 
@@ -448,7 +421,7 @@ public class MainActivity extends AppCompatActivity
                 for (DataSnapshot snapSegnalazioni : dataSnapshot.getChildren()) {
                     Report report2 = snapSegnalazioni.getValue(Report.class);
                     markerID = setMarkerColor(report2, report2.getTypology());
-                    //TODO creare modalità lista
+                    //TODO create list view
                 }
             }
 

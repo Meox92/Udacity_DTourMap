@@ -8,3 +8,4 @@
 /build
 /captures
 .externalNativeBuild
+**/*/res/values/google_maps_key.xml

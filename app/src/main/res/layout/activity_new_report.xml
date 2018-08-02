@@ -115,7 +115,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Timeline"
+                android:text="@string/timeline"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -138,6 +138,7 @@
                 style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableStart="@android:drawable/ic_menu_today"
                 android:textAlignment="viewStart"
                 app:layout_constraintEnd_toStartOf="@+id/new_repo_tv_title_address"
                 app:layout_constraintStart_toStartOf="parent"
@@ -164,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:button="@null"
                     android:drawableTop="?android:attr/listChoiceIndicatorMultiple"
-                    android:text="00:-04" />
+                    android:text="@string/time_slot_0_4" />
 
 
                 <android.support.v4.widget.Space
@@ -176,7 +177,7 @@
                     style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="04-08" />
+                    android:text="@string/time_slot_4_8" />
 
                 <android.support.v4.widget.Space
                     android:layout_width="8dp"
@@ -187,7 +188,7 @@
                     style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="08-12" />
+                    android:text="@string/time_slot_8_12" />
 
                 <android.support.v4.widget.Space
                     android:layout_width="8dp"
@@ -198,7 +199,7 @@
                     style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12-16" />
+                    android:text="@string/time_slot_12_16" />
 
                 <android.support.v4.widget.Space
                     android:layout_width="8dp"
@@ -209,7 +210,7 @@
                     style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="16-20" />
+                    android:text="@string/time_slot_16_20" />
 
                 <android.support.v4.widget.Space
                     android:layout_width="8dp"
@@ -220,7 +221,7 @@
                     style="@style/TimeCheckboxStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20-00" />
+                    android:text="@string/time_slot_20_24" />
 
             </LinearLayout>
 
@@ -242,8 +243,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:fontFamily="sans-serif-medium"
-                android:hint="Other info"
                 android:inputType="textPersonName"
+                android:text="@string/other_info"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_title"
                 android:textStyle="bold"
@@ -257,7 +258,6 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="12dp"
-                android:ems="10"
                 android:hint="@string/insert_description"
                 android:inputType="textMultiLine"
                 android:text="@={report.description}"

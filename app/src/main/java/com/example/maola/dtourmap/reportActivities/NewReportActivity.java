@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -68,6 +70,8 @@ public class NewReportActivity extends AppCompatActivity {
     private Uri reportPic;
     private String urlReportPic;
     private DatePickerDialog datePickerDialog;
+    private String TAG = "TAG";
+    private boolean reportSaved = false;
 
 
 
@@ -116,8 +120,9 @@ public class NewReportActivity extends AppCompatActivity {
         /*-------------------------------------------------*/
         myRef = FirebaseUtils.getReportRef();
         markerID = myRef.push().getKey();
+        Log.i(TAG, markerID);
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        riversRef = mStorageRef.child("images/" + user.getUid() + "/" + markerID + "/reportpicture1");
+        riversRef = mStorageRef.child("images/" + markerID + "/reportpicture1");
 
         /*-------------------------------------------------*/
 
@@ -147,7 +152,35 @@ public class NewReportActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        removePicture();
+        if(!reportSaved){
+            removePicture();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.new_report, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.nrm_action_save) {
+            handlers.onButtonClickWithParam(null,report);
+            return true;
+        } else if (id == R.id.nrm_action_cancel) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -212,22 +245,8 @@ public class NewReportActivity extends AppCompatActivity {
 
 
     public void setThumbnail(Intent data) {
-
-        /*Questo metodo mostra l'anteprima e il nome del file selezionata, premendo sul nome si può eliminare il file */
         reportPic = data.getData();
-//        newMarkerTxtPic1.setText(reportPic.getLastPathSegment());
-//        newMarkerTxtPic1.setVisibility(View.VISIBLE);
-//        newMarkerTxtPic1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                reportPic = null;
-//                riversRef.delete();
-//                newMarkerTxtPic1.setVisibility(View.GONE);
-//                newMarkerImgPic1.setVisibility(View.GONE);
-//            }
-//        });
         binding.newRepoTvAddPicture.setImageURI(reportPic);
-//        newMarkerImgPic1.setVisibility(View.VISIBLE);
     }
 
 
@@ -240,13 +259,15 @@ public class NewReportActivity extends AppCompatActivity {
             progressDialog.setTitle("Uploading");
             progressDialog.show();
 
-            riversRef.putFile(reportPic)
+             riversRef.putFile(reportPic)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                             @SuppressWarnings("VisibleForTests") final Uri downloadUrl = taskSnapshot.getDownloadUrl();
                             urlReportPic = downloadUrl.toString();
+                            Log.i(TAG, "picture loaded " + markerID);
+
 
 
                             progressDialog.dismiss();
@@ -312,7 +333,6 @@ public class NewReportActivity extends AppCompatActivity {
     }
 
     public void setDataToPush() {
-        List <String> time = new ArrayList<>();
 
         report.setLat(mLat);
         report.setLng(mLng);
@@ -322,6 +342,9 @@ public class NewReportActivity extends AppCompatActivity {
         report.setPostingDate(startTime);
         report.setUserId(user.getUid());
         report.setUserName(user.getDisplayName());
+        if(urlReportPic != null) {
+            report.setPicture(urlReportPic);
+        }
 
         String selectedCategory = String.valueOf(binding.categorySpinner.getSelectedItem());
         if(selectedCategory.equals(Constants.categoryArray.get(0))) {
@@ -330,7 +353,7 @@ public class NewReportActivity extends AppCompatActivity {
         } else {
             report.setTypology(selectedCategory);
         }
-
+        List <String> time = new ArrayList<>();
         CheckBox[] checkBoxes2 = {binding.checkBox, binding.checkBox2, binding.checkBox3, binding.checkBox4, binding.checkBox5, binding.checkBox6};
         for (CheckBox checkBox: checkBoxes2){
             if(checkBox.isChecked()){
@@ -354,10 +377,6 @@ public class NewReportActivity extends AppCompatActivity {
             this.context = context;
         }
 
-        public void onFabClicked(View view) {
-            Toast.makeText(getApplicationContext(), "FAB clicked!", Toast.LENGTH_SHORT).show();
-        }
-
         public void addPhoto() {
             openGallery();
         }
@@ -365,6 +384,8 @@ public class NewReportActivity extends AppCompatActivity {
         public void onButtonClickWithParam(View view, Report report) {
             setDataToPush();
             myRef.child(markerID).setValue(report);
+            Log.i(TAG, "report saved "+ markerID);
+            reportSaved = true;
             onBackPressed();
         }
 
