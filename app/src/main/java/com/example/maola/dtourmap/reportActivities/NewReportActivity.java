@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.location.Address;
 import android.location.Geocoder;
@@ -24,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.maola.dtourmap.BuildConfig;
 import com.example.maola.dtourmap.Model.Report;
 import com.example.maola.dtourmap.R;
 import com.example.maola.dtourmap.UserActivity.LoginActivity;
@@ -68,6 +70,12 @@ public class NewReportActivity extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
     private String TAG = "TAG";
     private boolean reportSaved = false;
+    private long currentTime;
+    private long reportTime;
+
+    private SharedPreferences sharedPreferences;
+
+
 
 
 
@@ -91,6 +99,9 @@ public class NewReportActivity extends AppCompatActivity {
         handlers = new MyClickHandlers(this);
         binding.setHandlers(handlers);
         getAddress(); // move to async tasks loader
+
+        sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+
 
 
 
@@ -229,8 +240,8 @@ public class NewReportActivity extends AppCompatActivity {
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.set(view.getYear(), view.getMonth(), view.getDayOfMonth(),
                 0, 0, 0);
-                                long startTime = calendar.getTimeInMillis();
-                                report.setReportDate(startTime);
+                                reportTime = calendar.getTimeInMillis();
+                                report.setReportDate(reportTime);
                             }
                         }, mYear, mMonth, mDay);
 
@@ -333,8 +344,8 @@ public class NewReportActivity extends AppCompatActivity {
         report.setLng(mLng);
         report.setMarkerID(markerID);
         Calendar calendar = Calendar.getInstance();
-        long startTime = calendar.getTimeInMillis();
-        report.setPostingDate(startTime);
+        currentTime = calendar.getTimeInMillis();
+        report.setPostingDate(currentTime);
         report.setUserId(user.getUid());
         report.setUserName(user.getDisplayName());
         if(urlReportPic != null) {
@@ -363,6 +374,18 @@ public class NewReportActivity extends AppCompatActivity {
      Toast.makeText(getApplicationContext(), "Segnalazione inserita con successo!", Toast.LENGTH_SHORT).show();
     }
 
+    private void saveSharedPreferences(){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(Constants.wAddress, report.getAddress());
+        editor.putString(Constants.wCategory, report.getCategory());
+        editor.putString(Constants.wUser, user.getEmail());
+        editor.putLong(Constants.wReportTime, report.getReportDate());
+        editor.putLong(Constants.wTime, currentTime);
+
+        editor.apply();
+    }
+
 
     public class MyClickHandlers {
 
@@ -377,10 +400,43 @@ public class NewReportActivity extends AppCompatActivity {
         }
 
         public void onButtonClickWithParam(View view, Report report) {
-            setDataToPush();
+//            setDataToPush();
+            report.setLat(mLat);
+            report.setLng(mLng);
+            report.setMarkerID(markerID);
+            Calendar calendar = Calendar.getInstance();
+            currentTime = calendar.getTimeInMillis();
+            report.setPostingDate(currentTime);
+            report.setUserId(user.getUid());
+            report.setUserName(user.getDisplayName());
+            if(urlReportPic != null) {
+                report.setPicture(urlReportPic);
+            }
+
+            String selectedCategory = String.valueOf(binding.categorySpinner.getSelectedItem());
+            if(selectedCategory.equals(Constants.categoryArray.get(0))) {
+                ((TextView)binding.categorySpinner.getSelectedView()).setError("Seleziona una categoria!");
+                return;
+            } else {
+                report.setCategory(selectedCategory);
+            }
+            List <String> time = new ArrayList<>();
+            CheckBox[] checkBoxes2 = {binding.checkBox, binding.checkBox2, binding.checkBox3, binding.checkBox4, binding.checkBox5, binding.checkBox6};
+            for (CheckBox checkBox: checkBoxes2){
+                if(checkBox.isChecked()){
+                    String time1 = checkBox.getText().toString();
+                    time.add(time1);
+                }
+            }
+            report.setTime(time);
+
+
+
+            Toast.makeText(getApplicationContext(), "Segnalazione inserita con successo!", Toast.LENGTH_SHORT).show();
             myRef.child(markerID).setValue(report);
             Log.i(TAG, "report saved "+ markerID);
             reportSaved = true;
+            saveSharedPreferences();
             onBackPressed();
         }
 

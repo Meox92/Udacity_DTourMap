@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.example.maola.dtourmap.R;
 
-public class RegisterActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

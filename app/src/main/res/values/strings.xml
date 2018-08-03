@@ -60,8 +60,10 @@
     <string name="login_in_progress">Login in corso</string>
     <string name="enter_anon">Accesso come ospite</string>
     <string name="continue_anon">Continua come ospite</string>
-
-
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="no_data_widget">Crea un report per vederlo qui</string>
+    <string name="name">Nome e Cognome</string>
 
 
 </resources>
