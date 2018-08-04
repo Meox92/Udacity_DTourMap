@@ -1,13 +1,19 @@
 package com.example.maola.dtourmap.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Maola on 07/08/2017.
  */
 
-public class User {
-    public String username, email, city, address, nation, report;
-
-
+public class User implements Parcelable{
+    public String username;
+    public String email;
+    public String city;
+    public String address;
+    public String nation;
+    public String password;
     public int points;
 
 
@@ -22,7 +28,6 @@ public class User {
         this.city = city;
         this.address = address;
         this.nation = nation;
-        this.report = report;
         this.points = points;
     }
 
@@ -74,7 +79,50 @@ public class User {
         this.points = points;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.username);
+        dest.writeString(this.email);
+        dest.writeString(this.city);
+        dest.writeString(this.address);
+        dest.writeString(this.nation);
+        dest.writeString(this.password);
+        dest.writeInt(this.points);
+    }
+
+    protected User(Parcel in) {
+        this.username = in.readString();
+        this.email = in.readString();
+        this.city = in.readString();
+        this.address = in.readString();
+        this.nation = in.readString();
+        this.password = in.readString();
+        this.points = in.readInt();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

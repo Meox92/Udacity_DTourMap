@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">DTourMap</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <!--Menu-->
+    <string name="action_profile">Profilo</string>
+    <string name="action_my_report">I miei report</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="action_share">Condividi</string>
+    <string name="action_rate">Vota</string>
+    <!--String-->
+    <string name="posizione_report_default">Puoi cambiare indirizzo tenendo premuto sulla mappa</string>
+    <string name="insert_title">Inserisci un titolo</string>
+    <string name="insert_resource">Fonte(es articolo di giornale)</string>
+    <string name="retrieve_address">Sto recuperando la posizione..</string>
+    <string name="insert_description">Inserisci i dettagli dell\'evento</string>
+
+    <!--CATEGORIE-->
+    <string name="furto">Furto</string>
+    <string name="scippo">Scippo</string>
+    <string name="vandalismo">Vandalismo</string>
+    <string name="spaccio">Spaccio</string>
+    <string name="altro">Altro</string>
+    <string name="insert_time">Inserisci la fascia oraria (puoi inserirne più d\'una) e giorno in cui è avvenuto il fatto</string>
+    <!--TIME SLOT-->
+    <string name="time_slot_0_4">00–04</string>
+    <string name="time_slot_4_8">04–08</string>
+    <string name="time_slot_8_12">08–12</string>
+    <string name="time_slot_12_16">12–16</string>
+    <string name="time_slot_16_20">16–20</string>
+    <string name="time_slot_20_24">20–00</string>
+
+    <!--USER-->
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="new_user">New User?</string>
+    <string name="login">Login</string>
+    <string name="signin">Sign In</string>
+    <string name="email">E-mail</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="remember">Ricorda</string>
+    <string name="auth_failed">Authentication failed!</string>
+    <string name="insert_email_error">Insert an email!</string>
+    <string name="insert_password_error">Insert a password!</string>
+    <string name="login_message">E\' necessario effettuare il login per creare un nuovo report</string>
+
+
+
+    <string name="other_info">Altre informazioni</string>
+    <string name="timeline">Timeline</string>
+
+    <string name="posted_on">Segnalato il&#160;</string>
+    <string name="by">&#160;da&#160;</string>
+
+    <string name="no_current_position">Impossibile trovare posizione attuale. \n Per aggiungere un nuovo report
+    premi sulla mappa per un paio di secondi</string>
+    <string name="login_in_progress">Login in corso</string>
+    <string name="enter_anon">Accesso come ospite</string>
+    <string name="continue_anon">Continua come ospite</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="no_data_widget">Crea un report per vederlo qui</string>
+    <string name="name">Nome e Cognome</string>
+    <string name="title_activity_maps">Mappa</string>
+
+
+</resources>

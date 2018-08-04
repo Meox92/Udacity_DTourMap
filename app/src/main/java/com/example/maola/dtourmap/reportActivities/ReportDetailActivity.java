@@ -37,9 +37,6 @@ public class ReportDetailActivity extends AppCompatActivity {
     private String reportId;
     private String TAG = "2ReportDetailActivity";
     private DatabaseReference myRef;
-    private String reportTitle, reportAuthor, reportPoints, reportDescr, reportTypo, reportPciture;
-    private Long reportDate;
-    private List reportTime;
     private Report report;
     private Query query;
     private StorageReference mStorageRef;

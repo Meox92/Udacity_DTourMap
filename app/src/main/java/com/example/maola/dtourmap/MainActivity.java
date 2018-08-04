@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -49,11 +48,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.List;
 
 import static com.example.maola.dtourmap.Utility.StringUtils.getDate;
-import static java.text.DateFormat.getDateTimeInstance;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -65,29 +62,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Location mLastKnownLocation;
-    private boolean mPermissionDenied = false;
-    private boolean mLocationPermissionGranted;
-//    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-//        @Override
-//        public void onMyLocationChange(Location location) {
-//            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-//            if (mMap != null) {
-//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-//            }
-//        }
-//    };
     private DatabaseReference myRef;
-//    private Object reportIdObj;
-//    private List<Object> listaChiavi;
-//    private Marker markerID;
-//    private HashMap<String, Object> result;
-//    private List<Report> lSegnalazioni;
-//    private Report report1;
-//    private String description, time;
-//
-//
-//    private FirebaseAuth firebaseAuth;
-//    private FirebaseAuth.AuthStateListener mAuthListener;
     private final String TAG = "2MainActivity";
     private FirebaseUser currentUser;
     private Toolbar toolbar;
@@ -121,15 +96,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-//        firebaseAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        if (mAuthListener != null) {
-//            firebaseAuth.removeAuthStateListener(mAuthListener);
-//        }
     }
 
     @Override
@@ -175,17 +146,17 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Intent i = new Intent(getApplicationContext(), ComingSoonActivity.class);
         if (id == R.id.nav_profile) {
-            // Handle the camera action
+            startActivity(i);
         } else if (id == R.id.nav_report) {
-
+            startActivity(i);
         } else if (id == R.id.nav_manage) {
-
+            startActivity(i);
         } else if (id == R.id.nav_share) {
-
+            startActivity(i);
         } else if (id == R.id.nav_rate) {
-
+            startActivity(i);
         } else if (id == R.id.logout) {
             logout();
         }
@@ -197,18 +168,13 @@ public class MainActivity extends AppCompatActivity
 
 
     private void getUserStatus(){
-        // Get User instance
-//        firebaseAuth = FirebaseAuth.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if(currentUser == null) {
-//            Toast.makeText(getApplicationContext(), "User null", Toast.LENGTH_LONG).show();
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
             finish();
         } else if(currentUser.isAnonymous()) {
-            Toast.makeText(getApplicationContext(), getString(R.string.enter_anon), Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getApplicationContext(), currentUser.getEmail(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.enter_anon), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -221,6 +187,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -257,7 +225,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Account deleted", Toast.LENGTH_LONG).show();
+                        Log.i(TAG, "Account deleted");
                         Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                         i.putExtra(Constants.show_anonymous, false);
                         startActivity(i);
@@ -295,8 +263,6 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-        mMap.setOnMyLocationButtonClickListener(this);
-        checkLocationPermission();
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -315,26 +281,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }});
 
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             checkLocationPermission();
-            return;
-        }
-
-        mFusedLocationProviderClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            mLastKnownLocation = location;
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), 16.00f));
-                        }
-                    }
-                });
-
     }
 
 
@@ -348,15 +295,30 @@ public class MainActivity extends AppCompatActivity
      * Enables the My Location layer if the fine location permission has been granted.
      */
     private void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Permission to access the location is missing.
             PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+                    Manifest.permission.ACCESS_FINE_LOCATION, false);
         } else if (mMap != null) {
             // Access to the location has been granted to the app.
             mMap.setMyLocationEnabled(true);
-            mLocationPermissionGranted = true;
+            mMap.setOnMyLocationButtonClickListener(this);
+            // TODO Handle case if user hasn't last location(no google maps installed)
+            mFusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                mLastKnownLocation = location;
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                        new LatLng(mLastKnownLocation.getLatitude(),
+                                                mLastKnownLocation.getLongitude()), 16.00f));
+                            }
+                        }
+
+                    });
+
         }
     }
 
@@ -368,39 +330,14 @@ public class MainActivity extends AppCompatActivity
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             return;
         }
-
         if (PermissionUtils.isPermissionGranted(permissions, grantResults,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
             // Enable the my location layer if the permission has been granted.
             checkLocationPermission();
-            mLocationPermissionGranted = true;
-        } else {
-            // Display the missing permission error dialog when the fragments resume.
-            mPermissionDenied = true;
         }
     }
-//
-//    private void updateLocationUI() {
-//        if (mMap == null) {
-//            return;
-//        }
-//        try {
-//            if (mLocationPermissionGranted) {
-//                mMap.setMyLocationEnabled(true);
-//                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-//            } else {
-//                mMap.setMyLocationEnabled(false);
-//                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-//                mLastKnownLocation = null;
-//                checkLocationPermission();
-//            }
-//        } catch (SecurityException e)  {
-//            Log.e("Exception: %s", e.getMessage());
-//        }
-//    }
 
     public void reportListener(){
-
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -414,7 +351,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -426,7 +363,6 @@ public class MainActivity extends AppCompatActivity
         Marker mRenderedMarker;
         String snippetString = "snippet1_snippet2_snippet3_snippet4";
         long postingDate = report1.getPostingDate();
-//        String snippetString = getDate(postingDate, "dd/MM/yyyy hh:mm");
         InfoWindowData info = new InfoWindowData();
         info.setAddress(report1.getAddress());
         info.setPostingDate(getDate(postingDate, true));
@@ -459,10 +395,11 @@ public class MainActivity extends AppCompatActivity
                     .snippet(snippetString)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
         }else {
-            Log.i(TAG, "Errore");
+            Log.i(TAG, "Error");
             mRenderedMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(report1.getLat(), report1.getLng())
             ).title("errore")
-                    .snippet("non disp1_non disp2_non disp3"));
+                    .snippet("non disp1_non disp2_non disp3")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         }
         mRenderedMarker.setTag(info);
         return mRenderedMarker;
@@ -504,8 +441,11 @@ class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         info_date.setText(str);
 
         InfoWindowData infoWindowData = (InfoWindowData) marker.getTag();
-        postedBy.setText(getString(R.string.posted_on).concat(infoWindowData.getPostingDate()).concat(getString(R.string.by)).concat(infoWindowData.getUserName()));
-        info_date.setText(infoWindowData.getCategory() + ", " + infoWindowData.getReportDate());
+
+        if(infoWindowData != null) {
+            postedBy.setText(getString(R.string.posted_on).concat(infoWindowData.getPostingDate()).concat(getString(R.string.by)).concat(infoWindowData.getUserName()));
+            info_date.setText(infoWindowData.getCategory().concat(", ").concat(infoWindowData.getReportDate()));
+        }
     }
 
 

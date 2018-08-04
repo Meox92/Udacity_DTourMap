@@ -4,8 +4,6 @@ package com.example.maola.dtourmap.Utility;
  * Created by Maola on 16/09/2017.
  */
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

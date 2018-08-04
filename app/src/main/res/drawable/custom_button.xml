@@ -21,9 +21,9 @@
         android:height="10dp" />
     <solid
         android:color="@color/colorPrimary" />
-    <stroke
-        android:width="@dimen/bordo"
-        android:color= '@color/colorBordo'
-        android:dashWidth="0dp"
-        android:dashGap="0dp" />
+    <!--<stroke-->
+        <!--android:width="@dimen/bordo"-->
+        <!--android:color= '@color/colorBordo'-->
+        <!--android:dashWidth="0dp"-->
+        <!--android:dashGap="0dp" />-->
 </shape>

@@ -67,6 +67,15 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/dtour_widget_info" />
         </receiver>
+
+        <activity
+            android:name=".ComingSoonActivity"
+            android:label="@string/title_activity_coming_soon"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

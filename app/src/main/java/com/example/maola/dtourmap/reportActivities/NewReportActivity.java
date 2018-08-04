@@ -1,7 +1,6 @@
 package com.example.maola.dtourmap.reportActivities;
 
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,9 +18,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,12 +35,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -56,15 +52,12 @@ public class NewReportActivity extends AppCompatActivity {
     private Report report;
     private MyClickHandlers handlers;
     private ActivityNewReportBinding binding;
-    private Spinner spinner;
     private StorageReference mStorageRef;
     private StorageReference riversRef;
-    private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser user;
     private DatabaseReference myRef;
     private String markerID;
-//    private List<String> categoryArray;
     private Uri reportPic;
     private String urlReportPic;
     private DatePickerDialog datePickerDialog;
@@ -72,12 +65,9 @@ public class NewReportActivity extends AppCompatActivity {
     private boolean reportSaved = false;
     private long currentTime;
     private long reportTime;
+    private List<String> categoryArray;
 
     private SharedPreferences sharedPreferences;
-
-
-
-
 
 
 
@@ -85,14 +75,16 @@ public class NewReportActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_new_report);
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_report);
 
         Intent i = getIntent();
         mLat = i.getDoubleExtra(Constants.vLat, 0);
         mLng = i.getDoubleExtra(Constants.vLng,0);
-        report = new Report();
+        if(savedInstanceState == null) {
+            report = new Report();
+        } else {
+            report = savedInstanceState.getParcelable("report");
+        }
         setMandatoryField();
         binding.newRepoTvTitleAddress.setText(getResources().getString(R.string.retrieve_address));
         binding.setReport(report);
@@ -108,8 +100,6 @@ public class NewReportActivity extends AppCompatActivity {
         setupUI();
 
         /*-----------------USER INSTANCE----------------------*/
-        //get firebase auth instance
-        mAuth = FirebaseAuth.getInstance();
         //get current user
         user = FirebaseAuth.getInstance().getCurrentUser();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -127,12 +117,17 @@ public class NewReportActivity extends AppCompatActivity {
         /*-------------------------------------------------*/
         myRef = FirebaseUtils.getReportRef();
         markerID = myRef.push().getKey();
-        Log.i(TAG, markerID);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         riversRef = mStorageRef.child("images/" + markerID + "/reportpicture1");
 
         /*-------------------------------------------------*/
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("report", report);
     }
 
     public void getAddress(){
@@ -203,11 +198,16 @@ public class NewReportActivity extends AppCompatActivity {
     }
 
     public void setupUI() {
-        // Category spinner
-//        categoryArray = Arrays.asList("Seleziona una categoria", "Furto", "Scippo", "Vandalismo", "Spaccio", "Altro");
+        // Category spinner: "Seleziona una categoria", "Furto", "Scippo", "Vandalismo", "Spaccio", "Altro"
+        categoryArray = Arrays.asList(getString(R.string.select_a_category),
+                getString(R.string.furto),
+                getString(R.string.scippo),
+                getString(R.string.vandalismo),
+                getString(R.string.spaccio), getString(R.string.altro));
+
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, Constants.categoryArray);
+                android.R.layout.simple_spinner_item, categoryArray);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.categorySpinner.setAdapter(arrayAdapter);
 
@@ -270,13 +270,10 @@ public class NewReportActivity extends AppCompatActivity {
 
                             @SuppressWarnings("VisibleForTests") final Uri downloadUrl = taskSnapshot.getDownloadUrl();
                             urlReportPic = downloadUrl.toString();
-                            Log.i(TAG, "picture loaded " + markerID);
-
-
                             binding.progressBar.setVisibility(View.GONE);
 
                             //and displaying a success toast
-                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.file_uploaded), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -288,18 +285,7 @@ public class NewReportActivity extends AppCompatActivity {
 
 
                             //and displaying error message
-                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            //calculating progress percentage
-                            @SuppressWarnings("VisibleForTests") double progress = (100.0 * taskSnapshot.getBytesTransferred());
-
-                            //displaying percentage in progress dialog
-                            binding.progressBar.setProgress((int)progress);
-
+                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -333,46 +319,11 @@ public class NewReportActivity extends AppCompatActivity {
         report.setLng(0.0d);
         report.setUserId("0");
         report.setUserName("");
-        report.setCategory("Seleziona una categoria!");
+        report.setCategory(getString(R.string.select_a_category));
         Calendar calendar = Calendar.getInstance();
         report.setReportDate(calendar.getTimeInMillis());
     }
 
-    public void setDataToPush() {
-
-        report.setLat(mLat);
-        report.setLng(mLng);
-        report.setMarkerID(markerID);
-        Calendar calendar = Calendar.getInstance();
-        currentTime = calendar.getTimeInMillis();
-        report.setPostingDate(currentTime);
-        report.setUserId(user.getUid());
-        report.setUserName(user.getDisplayName());
-        if(urlReportPic != null) {
-            report.setPicture(urlReportPic);
-        }
-
-        String selectedCategory = String.valueOf(binding.categorySpinner.getSelectedItem());
-        if(selectedCategory.equals(Constants.categoryArray.get(0))) {
-            ((TextView)binding.categorySpinner.getSelectedView()).setError("Seleziona una categoria!");
-            return;
-        } else {
-            report.setCategory(selectedCategory);
-        }
-        List <String> time = new ArrayList<>();
-        CheckBox[] checkBoxes2 = {binding.checkBox, binding.checkBox2, binding.checkBox3, binding.checkBox4, binding.checkBox5, binding.checkBox6};
-        for (CheckBox checkBox: checkBoxes2){
-            if(checkBox.isChecked()){
-                String time1 = checkBox.getText().toString();
-                time.add(time1);
-            }
-        }
-        report.setTime(time);
-
-
-
-     Toast.makeText(getApplicationContext(), "Segnalazione inserita con successo!", Toast.LENGTH_SHORT).show();
-    }
 
     private void saveSharedPreferences(){
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -400,7 +351,6 @@ public class NewReportActivity extends AppCompatActivity {
         }
 
         public void onButtonClickWithParam(View view, Report report) {
-//            setDataToPush();
             report.setLat(mLat);
             report.setLng(mLng);
             report.setMarkerID(markerID);
@@ -414,8 +364,8 @@ public class NewReportActivity extends AppCompatActivity {
             }
 
             String selectedCategory = String.valueOf(binding.categorySpinner.getSelectedItem());
-            if(selectedCategory.equals(Constants.categoryArray.get(0))) {
-                ((TextView)binding.categorySpinner.getSelectedView()).setError("Seleziona una categoria!");
+            if(selectedCategory.equals(categoryArray.get(0))) {
+                ((TextView)binding.categorySpinner.getSelectedView()).setError(getString(R.string.select_a_category));
                 return;
             } else {
                 report.setCategory(selectedCategory);
@@ -430,9 +380,7 @@ public class NewReportActivity extends AppCompatActivity {
             }
             report.setTime(time);
 
-
-
-            Toast.makeText(getApplicationContext(), "Segnalazione inserita con successo!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.new_report_success), Toast.LENGTH_SHORT).show();
             myRef.child(markerID).setValue(report);
             Log.i(TAG, "report saved "+ markerID);
             reportSaved = true;

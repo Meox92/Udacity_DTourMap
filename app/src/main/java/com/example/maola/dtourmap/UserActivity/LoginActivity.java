@@ -1,6 +1,5 @@
 package com.example.maola.dtourmap.UserActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,9 +29,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText loginETPassword;
     private Button loginBtnSignIp;
     private TextView loginTxtNewUser;
-    private ProgressDialog progressDialog;
     private Button loginBtnAnon;
     private ProgressBar progressBar;
+    private TextView loginMessage;
 
 
 
@@ -48,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         loginTxtNewUser = (TextView)findViewById(R.id.login_edt_new_user);
         loginBtnAnon = (Button)findViewById(R.id.login_btn_anonimo);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        loginMessage = (TextView) findViewById(R.id.login_message);
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -82,10 +83,22 @@ public class LoginActivity extends AppCompatActivity {
                     signInAnonymously();
                 }
             });
+            loginMessage.setText(getString(R.string.login_message));
+            loginMessage.setVisibility(View.VISIBLE);
+
+        }
+
+        if(savedInstanceState != null) {
+            loginETEmail.setText(savedInstanceState.getString("email"));
         }
 
 
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("email", loginETEmail.getText().toString());
     }
 
     @Override
@@ -112,8 +125,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn(String email, String password){
-//        progressDialog = ProgressDialog.show(LoginActivity.this, getString(R.string.login_in_progress),
-//                "", true);
         progressBar.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(email, password)
@@ -121,7 +132,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-//                        Toast.makeText(getApplicationContext(), "Signed in", Toast.LENGTH_SHORT).show();
 
                         if(task.isSuccessful()){
                             Intent i = new Intent(LoginActivity.this, MainActivity.class);
@@ -144,8 +154,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInAnonymously() {
-//        progressDialog = ProgressDialog.show(LoginActivity.this, getString(R.string.login_in_progress),
-//                getString(R.string.enter_anon), true);
         progressBar.setVisibility(View.VISIBLE);
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -158,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                         } else if (!task.isSuccessful()) {
                             Log.w(TAG, "Failed : ", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.sign_in_error), Toast.LENGTH_SHORT).show();
                         }
                         progressBar.setVisibility(View.GONE);
                     }
@@ -169,7 +177,6 @@ public class LoginActivity extends AppCompatActivity {
         loginBtnSignIp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                saveCredentials();
                 if(loginETEmail.getText().toString().isEmpty()) {
                     loginETEmail.setError(getResources().getString(R.string.insert_email_error));
                 } if(loginETPassword.getText().toString().isEmpty()) {
@@ -190,7 +197,6 @@ public class LoginActivity extends AppCompatActivity {
         loginTxtNewUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO possibilità di registrarsi
                 Intent i = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(i);
                 finish();

@@ -2,6 +2,8 @@ package com.example.maola.dtourmap.Model;
 
 import android.databinding.Bindable;
 import android.databinding.BaseObservable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 
 import com.android.databinding.library.baseAdapters.BR;
@@ -15,12 +17,12 @@ import java.util.Map;
  * Created by Maola on 07/08/2017.
  */
 
-public class Report extends BaseObservable {
+public class Report implements Parcelable {
     private String userId;
     private String userName;
     private String title;
     private String description;
-    private String category;
+    private String category; // Create category object with ids
     private String picture;
 
     private String markerID;
@@ -28,10 +30,8 @@ public class Report extends BaseObservable {
     private String address;
     private List<String> time;
     private long reportDate;
-    private String sReportDate;
     //Data di segnalazione
     private long postingDate;
-    private String sPostingDate;
     private String source;
     private int points;
 
@@ -47,15 +47,12 @@ public class Report extends BaseObservable {
     }
 
 
-    @Bindable
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-        notifyPropertyChanged(BR.title);
-
     }
 
     public String getDescription() {
@@ -162,20 +159,58 @@ public class Report extends BaseObservable {
         this.userName = userName;
     }
 
-    public String getsReportDate() {
-        return sReportDate;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setsReportDate(String sReportDate) {
-        this.sReportDate = sReportDate;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.userId);
+        dest.writeString(this.userName);
+        dest.writeString(this.title);
+        dest.writeString(this.description);
+        dest.writeString(this.category);
+        dest.writeString(this.picture);
+        dest.writeString(this.markerID);
+        dest.writeValue(this.lat);
+        dest.writeValue(this.lng);
+        dest.writeString(this.address);
+        dest.writeStringList(this.time);
+        dest.writeLong(this.reportDate);
+        dest.writeLong(this.postingDate);
+        dest.writeString(this.source);
+        dest.writeInt(this.points);
     }
 
-    public String getsPostingDate() {
-        return sPostingDate;
+    protected Report(Parcel in) {
+        this.userId = in.readString();
+        this.userName = in.readString();
+        this.title = in.readString();
+        this.description = in.readString();
+        this.category = in.readString();
+        this.picture = in.readString();
+        this.markerID = in.readString();
+        this.lat = (Double) in.readValue(Double.class.getClassLoader());
+        this.lng = (Double) in.readValue(Double.class.getClassLoader());
+        this.address = in.readString();
+        this.time = in.createStringArrayList();
+        this.reportDate = in.readLong();
+        this.postingDate = in.readLong();
+        this.source = in.readString();
+        this.points = in.readInt();
     }
 
-    public void setsPostingDate(String sPostingDate) {
-        this.sPostingDate = sPostingDate;
-    }
+    public static final Creator<Report> CREATOR = new Creator<Report>() {
+        @Override
+        public Report createFromParcel(Parcel source) {
+            return new Report(source);
+        }
 
+        @Override
+        public Report[] newArray(int size) {
+            return new Report[size];
+        }
+    };
 }
